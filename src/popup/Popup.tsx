@@ -1,29 +1,20 @@
-import { useEffect, useState } from 'react';
-import type { Rule } from '@/types/rule';
-import { getRules, onRulesChanged } from '@/utils/ruleStorage';
+import useGetRules from '@/hooks/useGetRules';
 
 export default function Popup() {
-  const [rules, setRules] = useState<Rule[] | null>(null);
-
-  useEffect(() => {
-    void getRules().then(setRules);
-    return onRulesChanged(setRules);
-  }, []);
-
-  const activeCount = rules?.filter(r => r.enabled).length ?? 0;
+  const { rules, activeRulesCount } = useGetRules();
 
   const openOptionsPage = () => {
     chrome.runtime.openOptionsPage();
   };
 
   return (
-    <div className="flex w-90 max-h-96 min-h-52 flex-col bg-slate-900 text-slate-100">
+    <div className="flex w-90 max-h-96 min-h-52 flex-col text-slate-100">
       <div className="flex items-center justify-between border-b border-slate-700 px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_8px_blue]" />
           <span className="font-semibold tracking-tight">Intercepto</span>
         </div>
-        <span className="font-mono text-xs text-slate-400">{activeCount} active</span>
+        <span className="font-mono text-xs text-slate-400">{activeRulesCount} active</span>
       </div>
 
       <div className="flex-1 overflow-y-auto">

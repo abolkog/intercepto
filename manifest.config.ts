@@ -26,4 +26,8 @@ export default defineManifest({
       matches: ['https://*/*'],
     },
   ],
+  options_ui: {
+    page: 'src/options/index.html',
+    open_in_tab: true,
+  },
 });
