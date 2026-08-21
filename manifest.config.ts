@@ -22,8 +22,15 @@ export default defineManifest({
   permissions: ['storage'],
   content_scripts: [
     {
-      js: ['src/content/main.tsx'],
-      matches: ['https://*/*'],
+      js: ['src/content/interceptorMain.ts'],
+      matches: ['https://*/*', 'http://*/*'],
+      run_at: 'document_start',
+      world: 'MAIN',
+    },
+    {
+      js: ['src/content/main.ts'],
+      matches: ['https://*/*', 'http://*/*'],
+      run_at: 'document_start',
     },
   ],
   options_ui: {
