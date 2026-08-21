@@ -2,7 +2,8 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    environment: 'web-ext',
+    globals: true,
+    environment: 'node',
     environmentOptions: {
       'web-ext': {
         path: './dist',
