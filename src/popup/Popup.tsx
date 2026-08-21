@@ -1,7 +1,22 @@
-import useGetRules from '@/hooks/useGetRules';
+import Toggle from '@/components/Toggle';
+import useRules from '@/hooks/useRules';
+
+const MAX_POPUP_RULES = 3;
+
+function MethodBadge({ method }: { method: string }) {
+  return (
+    <span className="rounded border border-line px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-muted">
+      {method}
+    </span>
+  );
+}
 
 export default function Popup() {
-  const { rules, activeRulesCount } = useGetRules();
+  const { rules, activeRulesCount, toggleRule } = useRules();
+
+  const sortedRules = [...(rules ?? [])].sort((a, b) => b.updatedAt - a.updatedAt);
+  const visibleRules = sortedRules.slice(0, MAX_POPUP_RULES);
+  const remainingRulesCount = Math.max(sortedRules.length - MAX_POPUP_RULES, 0);
 
   const openOptionsPage = () => {
     chrome.runtime.openOptionsPage();
@@ -18,12 +33,32 @@ export default function Popup() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {rules === null && <p className="px-4 py-6 text-center text-sm text-muted">Loading rules…</p>}
+        {rules === undefined && <p className="px-4 py-6 text-center text-sm text-muted">Loading rules...</p>}
 
         {rules?.length === 0 && (
           <div className="px-4 py-6 text-center text-sm text-muted">
             No rules yet. Create one to start mocking API calls.
           </div>
+        )}
+
+        {visibleRules.map(rule => (
+          <div key={rule.id} className="flex items-center gap-3 border-b border-line/60 px-4 py-2.5 last:border-b-0">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm text-slate-100">{rule.name || 'Untitled rule'}</p>
+              <div className="mt-1 flex items-center gap-1.5">
+                <MethodBadge method={rule.method} />
+                <span className="truncate font-mono text-[11px] text-muted">{rule.urlMatch}</span>
+              </div>
+            </div>
+
+            <Toggle checked={rule.enabled} onChange={checked => toggleRule(rule, checked)} name="status" />
+          </div>
+        ))}
+
+        {remainingRulesCount > 0 && (
+          <p className="px-4 py-3 text-xs text-slate-400">
+            {remainingRulesCount} more rule{remainingRulesCount === 1 ? '' : 's'}. Click Open Intercepto to view them.
+          </p>
         )}
       </div>
 

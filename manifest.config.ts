@@ -30,4 +30,8 @@ export default defineManifest({
     page: 'src/options/index.html',
     open_in_tab: true,
   },
+  background: {
+    service_worker: 'src/background/index.ts',
+    type: 'module',
+  },
 });

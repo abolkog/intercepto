@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import RulesTable from '@/components/RulesTable';
-import useGetRules from '@/hooks/useGetRules';
+import useRules from '@/hooks/useRules';
 import { Rule, RuleDraft } from '@/types/rule';
 import RuleForm from '@/components/RuleForm';
 import { addRule, deleteRule, updateRule } from '@/utils/ruleStorage';
 
 export default function OptionsPage() {
-  const { rules } = useGetRules();
+  const { rules, toggleRule } = useRules();
   const [editingRule, setEditingRule] = useState<Rule | undefined>(undefined);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -54,6 +54,7 @@ export default function OptionsPage() {
                   rules={rules}
                   onSelectRule={rule => openRulesForm(rule)}
                   onDeleteRule={id => deleteRule(id)}
+                  onToggleRule={(rule, status) => toggleRule(rule, status)}
                 />
               </div>
             </div>
