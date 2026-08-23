@@ -1,10 +1,16 @@
-import { INTERCEPTO_STATE_KEY, INTERCEPTO_RULES_UPDATE, INTERCEPTO_MESSAGE_SOURCE } from '@/constants';
-import { type InterceptoRulesUpdateMessage, type InterceptoRule, type XhrMeta } from '@/types/interceptor';
+import {
+  INTERCEPTO_STATE_KEY,
+  INTERCEPTO_RULE_MATCHED,
+  INTERCEPTO_RULES_UPDATE,
+  INTERCEPTO_MESSAGE_SOURCE,
+} from '@/constants';
+import { type InterceptoMessage, type InterceptoRulesUpdateMessage, type XhrMeta } from '@/types/interceptor';
+import { Rule } from '@/types/rule';
 
 export function installInterceptor(): void {
   const globalWindow = window as Window & {
     [INTERCEPTO_STATE_KEY]?: {
-      rules: InterceptoRule[];
+      rules: Rule[];
       originalFetch: typeof window.fetch;
       originalXhrOpen: XMLHttpRequest['open'];
       originalXhrSend: XMLHttpRequest['send'];
@@ -16,7 +22,7 @@ export function installInterceptor(): void {
     return;
   }
 
-  const findMatchingRule = (url: string, method: string, rules: InterceptoRule[]): InterceptoRule | undefined => {
+  const findMatchingRule = (url: string, method: string, rules: Rule[]): Rule | undefined => {
     const normalizedMethod = method.toUpperCase();
     return rules.find(rule => {
       if (!rule.enabled) return false;
@@ -32,6 +38,18 @@ export function installInterceptor(): void {
     } catch {
       return 'text/plain; charset=utf-8';
     }
+  };
+
+  const notifyRuleMatched = (rule: Rule): void => {
+    if (!rule.showNotifications) return;
+    const message: Extract<InterceptoMessage, { type: typeof INTERCEPTO_RULE_MATCHED }> = {
+      source: INTERCEPTO_MESSAGE_SOURCE,
+      type: INTERCEPTO_RULE_MATCHED,
+      ruleName: rule.name,
+      method: rule.method,
+    };
+
+    window.postMessage(message, '*');
   };
 
   const messageListener = (event: MessageEvent<InterceptoRulesUpdateMessage>) => {
@@ -62,6 +80,8 @@ export function installInterceptor(): void {
     if (!matchedRule) {
       return originalFetch(input, init);
     }
+
+    notifyRuleMatched(matchedRule);
 
     const body = matchedRule.responseBody ?? '';
     return new Response(body, {
@@ -94,6 +114,8 @@ export function installInterceptor(): void {
     if (!matchedRule) {
       return originalXhrSend.call(this, body);
     }
+
+    notifyRuleMatched(matchedRule);
 
     const responseBody = matchedRule.responseBody ?? '';
     const contentType = getContentType(responseBody);

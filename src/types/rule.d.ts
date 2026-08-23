@@ -4,6 +4,7 @@ export type Rule = {
   id: string;
   name: string;
   enabled: boolean;
+  showNotifications: boolean;
   urlMatch: string;
   method: HttpMethod;
   statusCode: number;

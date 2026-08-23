@@ -11,6 +11,7 @@ type RuleFormProps = {
 const emptyDraft: RuleDraft = {
   name: '',
   enabled: true,
+  showNotifications: true,
   urlMatch: '',
   method: '*',
   statusCode: 200,
@@ -147,16 +148,6 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                   </div>
                 </div>
               </div>
-
-              <label className="mt-6 flex items-center gap-2 text-sm text-slate-200">
-                <input
-                  type="checkbox"
-                  checked={draft.enabled}
-                  onChange={e => update('enabled', e.target.checked)}
-                  className="h-4 w-4 rounded border-line bg-ink accent-signalDim"
-                />
-                Enabled
-              </label>
             </div>
 
             <div className="sm:col-span-4">
@@ -183,6 +174,98 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                     rows={7}
                     spellCheck={false}
                   />
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <div className="flex gap-3">
+                  <div className="flex h-6 shrink-0 items-center">
+                    <div className="group grid size-4 grid-cols-1">
+                      <input
+                        id="enabled"
+                        type="checkbox"
+                        name="enabled"
+                        checked={draft.enabled}
+                        onChange={e => update('enabled', e.target.checked)}
+                        aria-describedby="enabled-description"
+                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-indigo-500 checked:bg-indigo-500 indeterminate:border-indigo-500 indeterminate:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:border-white/5 disabled:bg-white/10 disabled:checked:bg-white/10 forced-colors:appearance-auto"
+                      />
+                      <svg
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-white/25"
+                      >
+                        <path
+                          d="M3 8L6 11L11 3.5"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="opacity-0 group-has-checked:opacity-100"
+                        />
+                        <path
+                          d="M3 7H11"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="opacity-0 group-has-indeterminate:opacity-100"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="text-sm/6">
+                    <label htmlFor="enabled" className="font-medium text-white">
+                      Enable Rule
+                    </label>
+                    <p id="enabled-description" className="text-gray-400">
+                      Enable the rule
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <div className="flex gap-3">
+                  <div className="flex h-6 shrink-0 items-center">
+                    <div className="group grid size-4 grid-cols-1">
+                      <input
+                        id="showNotifications"
+                        type="checkbox"
+                        name="showNotifications"
+                        checked={draft.showNotifications}
+                        onChange={e => update('showNotifications', e.target.checked)}
+                        aria-describedby="notifications-description"
+                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-indigo-500 checked:bg-indigo-500 indeterminate:border-indigo-500 indeterminate:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:border-white/5 disabled:bg-white/10 disabled:checked:bg-white/10 forced-colors:appearance-auto"
+                      />
+                      <svg
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-white/25"
+                      >
+                        <path
+                          d="M3 8L6 11L11 3.5"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="opacity-0 group-has-checked:opacity-100"
+                        />
+                        <path
+                          d="M3 7H11"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="opacity-0 group-has-indeterminate:opacity-100"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="text-sm/6">
+                    <label htmlFor="showNotifications" className="font-medium text-white">
+                      Show notifications
+                    </label>
+                    <p id="notifications-description" className="text-gray-400">
+                      Display a toast message when the rule is activated and api call is intercepted
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
