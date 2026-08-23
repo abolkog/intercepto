@@ -5,6 +5,7 @@ import type { RuleDraft } from '../types/rule';
 const draft: RuleDraft = {
   name: 'Mock empty cart',
   enabled: true,
+  showNotifications: true,
   urlMatch: '/cart',
   method: 'GET',
   statusCode: 200,

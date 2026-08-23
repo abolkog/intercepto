@@ -89,6 +89,7 @@ describe('RuleForm', () => {
       id: 'r-1',
       name: 'Existing rule',
       enabled: true,
+      showNotifications: true,
       urlMatch: '/orders',
       method: 'GET',
       statusCode: 200,

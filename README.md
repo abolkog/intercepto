@@ -1,16 +1,16 @@
 # Intercepto
 
-A Chrome extension for intercepting API calls made by a page and mocking
-their status code and response body — similar to Requestly's response
-rules.
+Intercepto is a Chrome extension for mocking API calls in the browser.
+It matches requests by URL and HTTP method, then returns custom status codes
+and response bodies directly from extension rules.
 
 ## Features
 
-- React with TypeScript
-- TypeScript support
-- Vite build tool
-- CRXJS Vite plugin integration
-- Chrome extension manifest configuration
+- Rule-based request matching by URL and HTTP method
+- Mock custom status codes and JSON or text responses
+- Works with page requests made through fetch and XMLHttpRequest
+- Popup and options UIs for managing rules
+- Built with React, TypeScript, Vite, and CRXJS
 
 ## Quick Start
 
@@ -34,21 +34,28 @@ npm run dev
 npm run build
 ```
 
+## Usage
+
+1. Create a rule in the options page.
+2. Set the request URL match and HTTP method.
+3. Set the response status code and body.
+4. Enable the rule.
+5. Open a page that makes a matching request and Intercepto will return the mocked response.
+
 ## Project Structure
 
-- `src/popup/` - Extension popup UI
-- `src/content/` - Content scripts
+- `src/popup/` - Popup UI
+- `src/options/` - Options page UI
+- `src/content/` - Content scripts and request interception
+- `src/components/` - Shared UI components
+- `src/utils/` - Storage, notifications, and helper logic
 - `manifest.config.ts` - Chrome extension manifest configuration
 
-## Documentation
+## Open Source
 
-- [React Documentation](https://reactjs.org/)
-- [Vite Documentation](https://vitejs.dev/)
-- [CRXJS Documentation](https://crxjs.dev/vite-plugin)
+- Repository: https://github.com/abolkog/intercepto
+- License: MIT
 
-## Chrome Extension Development Notes
+## License
 
-- Use `manifest.config.ts` to configure your extension
-- The CRXJS plugin automatically handles manifest generation
-- Content scripts should be placed in `src/content/`
-- Popup UI should be placed in `src/popup/`
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

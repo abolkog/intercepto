@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { type InterceptoRule } from '@/types/interceptor';
+import { type Rule } from '@/types/rule';
 import {
   INTERCEPTO_MESSAGE_SOURCE,
   INTERCEPTO_REQUEST_RULES,
@@ -9,8 +9,8 @@ import {
 
 const notifyRuleMatchedMock = vi.fn();
 
-const getRulesMock = vi.fn<() => Promise<InterceptoRule[]>>();
-const onRulesChangedMock = vi.fn<(callback: (rules: InterceptoRule[]) => void) => () => void>();
+const getRulesMock = vi.fn<() => Promise<Rule[]>>();
+const onRulesChangedMock = vi.fn<(callback: (rules: Rule[]) => void) => () => void>();
 
 vi.mock('@/utils/ruleStorage', () => ({
   getRules: getRulesMock,
@@ -22,7 +22,7 @@ vi.mock('@/utils/ruleNotifications', () => ({
 }));
 
 describe('content main bridge', () => {
-  let onRulesChangedCallback: ((rules: InterceptoRule[]) => void) | undefined;
+  let onRulesChangedCallback: ((rules: Rule[]) => void) | undefined;
 
   beforeEach(() => {
     onRulesChangedCallback = undefined;
@@ -31,10 +31,12 @@ describe('content main bridge', () => {
         id: 'r-1',
         name: 'Mock empty cart',
         enabled: true,
+        showNotifications: true,
         urlMatch: '/shows',
         method: 'GET',
         statusCode: 200,
         responseBody: '{"ok":true}',
+        createdAt: 1,
         updatedAt: 1,
       },
     ]);
@@ -87,15 +89,17 @@ describe('content main bridge', () => {
 
     await import('./main');
 
-    const updatedRules: InterceptoRule[] = [
+    const updatedRules: Rule[] = [
       {
         id: 'r-2',
         name: 'Mock empty cart',
         enabled: true,
+        showNotifications: true,
         urlMatch: '/cast',
         method: 'GET',
         statusCode: 201,
         responseBody: '{"source":"update"}',
+        createdAt: 1,
         updatedAt: 2,
       },
     ];

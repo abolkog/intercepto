@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
-import { Rule } from '@/types/rule';
+import { type Rule } from '@/types/rule';
 import { installInterceptor } from './installInterceptor';
 import { INTERCEPTO_MESSAGE_SOURCE, INTERCEPTO_RULE_MATCHED, INTERCEPTO_RULES_UPDATE } from '@/constants';
 

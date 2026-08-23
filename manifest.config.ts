@@ -20,6 +20,12 @@ export default defineManifest({
     default_popup: 'src/popup/index.html',
   },
   permissions: ['storage'],
+  web_accessible_resources: [
+    {
+      resources: ['public/icons/*.png'],
+      matches: ['<all_urls>'],
+    },
+  ],
   content_scripts: [
     {
       js: ['src/content/interceptorMain.ts'],

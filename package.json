@@ -4,6 +4,15 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abolkog/intercepto.git"
+  },
+  "bugs": {
+    "url": "https://github.com/abolkog/intercepto/issues"
+  },
+  "homepage": "https://github.com/abolkog/intercepto#readme",
   "scripts": {
     "dev": "vite",
     "test": "vitest",
