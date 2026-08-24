@@ -51,11 +51,6 @@ npm run build
 - `src/utils/` - Storage, notifications, and helper logic
 - `manifest.config.ts` - Chrome extension manifest configuration
 
-## Open Source
-
-- Repository: https://github.com/abolkog/intercepto
-- License: MIT
-
 ## Automated Releases
 
 This project uses semantic-release with GitHub Actions.
