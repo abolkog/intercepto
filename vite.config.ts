@@ -17,7 +17,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     crx({ manifest }),
-    zip({ outDir: 'release', outFileName: `crx-${name}-${version}.zip` }),
+    zip({ outDir: 'release', outFileName: `${name}-${version}.zip` }),
   ],
   server: {
     cors: {

@@ -1,0 +1,70 @@
+name: Publish To Chrome Web Store
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extension package
+        run: npm run build
+
+      - name: Resolve zip artifact
+        run: |
+          ZIP_FILE=$(ls -1 release/*.zip | head -n 1)
+          if [ -z "$ZIP_FILE" ]; then
+            echo "No release zip found in release/"
+            exit 1
+          fi
+          echo "ZIP_FILE=$ZIP_FILE" >> $GITHUB_ENV
+
+      - name: Get OAuth access token
+        run: |
+          ACCESS_TOKEN=$(curl -s https://oauth2.googleapis.com/token \
+            -d client_id="${{ secrets.CHROME_CLIENT_ID }}" \
+            -d client_secret="${{ secrets.CHROME_CLIENT_SECRET }}" \
+            -d refresh_token="${{ secrets.CHROME_REFRESH_TOKEN }}" \
+            -d grant_type=refresh_token | jq -r .access_token)
+
+          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
+            echo "Failed to get access token"
+            exit 1
+          fi
+
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+
+      - name: Upload package to Chrome Web Store
+        run: |
+          curl -s -X PUT \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "x-goog-api-version: 2" \
+            -T "$ZIP_FILE" \
+            "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${{ secrets.CHROME_EXTENSION_ID }}"
+
+      - name: Publish to Chrome Web Store
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "x-goog-api-version: 2" \
+            "https://www.googleapis.com/chromewebstore/v1.1/items/${{ secrets.CHROME_EXTENSION_ID }}/publish"
