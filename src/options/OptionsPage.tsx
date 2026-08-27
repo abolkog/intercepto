@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
-import RulesTable from '@/components/RulesTable';
+import RulesList from '@/components/RulesList';
 import useRules from '@/hooks/useRules';
 import { Rule, RuleDraft } from '@/types/rule';
 import RuleForm from '@/components/RuleForm';
 import { addRule, deleteRule, updateRule } from '@/utils/ruleStorage';
 
 export default function OptionsPage() {
-  const { rules, toggleRule } = useRules();
+  const { rules, toggleRule, duplicateRule } = useRules();
   const [editingRule, setEditingRule] = useState<Rule | undefined>(undefined);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -28,7 +28,7 @@ export default function OptionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ink text-slate-100">
+    <div className="min-h-screen text-slate-100">
       <Header />
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="px-4 sm:px-6 lg:px-8">
@@ -50,11 +50,12 @@ export default function OptionsPage() {
           <div className="mt-8 flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <RulesTable
+                <RulesList
                   rules={rules}
                   onSelectRule={rule => openRulesForm(rule)}
                   onDeleteRule={id => deleteRule(id)}
                   onToggleRule={(rule, status) => toggleRule(rule, status)}
+                  onDuplicateRule={rule => duplicateRule(rule)}
                 />
               </div>
             </div>
