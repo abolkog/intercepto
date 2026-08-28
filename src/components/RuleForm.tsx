@@ -72,7 +72,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                 Rule Name
               </label>
               <div className="mt-2">
-                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
+                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-purple-500">
                   <input
                     id="name"
                     type="text"
@@ -92,7 +92,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                   URL contains
                 </label>
 
-                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
+                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-purple-500">
                   <input
                     id="urlMatch"
                     type="text"
@@ -110,7 +110,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                   Method
                 </label>
 
-                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
+                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-purple-500">
                   <select
                     id="method"
                     name="method"
@@ -134,7 +134,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                   Status code
                 </label>
                 <div className="mt-2">
-                  <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
+                  <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-purple-500">
                     <input
                       id="statusCode"
                       type="number"
@@ -164,7 +164,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                 </button>
               </div>
               <div className="mt-2">
-                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-500">
+                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-purple-500">
                   <textarea
                     id="responseBody"
                     name="responseBody"
@@ -188,7 +188,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                         checked={draft.enabled}
                         onChange={e => update('enabled', e.target.checked)}
                         aria-describedby="enabled-description"
-                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-indigo-500 checked:bg-indigo-500 indeterminate:border-indigo-500 indeterminate:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:border-white/5 disabled:bg-white/10 disabled:checked:bg-white/10 forced-colors:appearance-auto"
+                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-purple-500 checked:bg-purple-500 indeterminate:border-purple-500 indeterminate:bg-purple-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 disabled:border-white/5 disabled:bg-white/10 disabled:checked:bg-white/10 forced-colors:appearance-auto"
                       />
                       <svg
                         viewBox="0 0 14 14"
@@ -234,7 +234,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
                         checked={draft.showNotifications}
                         onChange={e => update('showNotifications', e.target.checked)}
                         aria-describedby="notifications-description"
-                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-indigo-500 checked:bg-indigo-500 indeterminate:border-indigo-500 indeterminate:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:border-white/5 disabled:bg-white/10 disabled:checked:bg-white/10 forced-colors:appearance-auto"
+                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-purple-500 checked:bg-purple-500 indeterminate:border-purple-500 indeterminate:bg-purple-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 disabled:border-white/5 disabled:bg-white/10 disabled:checked:bg-white/10 forced-colors:appearance-auto"
                       />
                       <svg
                         viewBox="0 0 14 14"
@@ -283,7 +283,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
             </button>
             <button
               type="submit"
-              className="rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-medium text-ink hover:bg-indigo-400 cursor-pointer"
+              className="rounded-md bg-purple-500 px-3 py-1.5 text-sm font-medium text-ink hover:bg-purple-400 cursor-pointer"
             >
               Save rule
             </button>

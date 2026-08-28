@@ -26,7 +26,7 @@ export default function Popup() {
     <div className="flex w-90 max-h-96 min-h-52 flex-col text-slate-100">
       <div className="flex items-center justify-between border-b border-slate-700 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_8px_blue]" />
+          <span className="h-2 w-2 rounded-full bg-purple-400 shadow-[0_0_8px_blue]" />
           <span className="font-semibold tracking-tight">Intercepto</span>
         </div>
         <span className="font-mono text-xs text-slate-400">{activeRulesCount} active</span>
@@ -66,7 +66,7 @@ export default function Popup() {
         <button
           type="button"
           onClick={openOptionsPage}
-          className="w-full rounded-md bg-blue-400 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-blue-300 cursor-pointer"
+          className="w-full rounded-md bg-purple-400 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-300 cursor-pointer"
         >
           Open Intercepto
         </button>
