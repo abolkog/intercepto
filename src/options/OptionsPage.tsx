@@ -1,9 +1,10 @@
+import { PlusCircleIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import Header from '@/components/Header';
 import RulesList from '@/components/RulesList';
 import useRules from '@/hooks/useRules';
 import { Rule, RuleDraft } from '@/types/rule';
-import RuleForm from '@/components/RuleForm';
+import RuleFormDialog from '@/components/RuleFormDialog';
 import { addRule, deleteRule, updateRule } from '@/utils/ruleStorage';
 
 export default function OptionsPage() {
@@ -40,10 +41,12 @@ export default function OptionsPage() {
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
               <button
                 type="button"
-                className="block rounded-md bg-purple-500 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-purple-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
+                className="inline-flex items-center gap-x-1.5 rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
+
                 onClick={() => openRulesForm()}
               >
                 New Rule
+                <PlusCircleIcon aria-hidden="true" className="-mr-0.5 size-5" />
               </button>
             </div>
           </div>
@@ -51,6 +54,7 @@ export default function OptionsPage() {
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <RulesList
+                  key={editingRule?.id ?? 'new'}
                   rules={rules}
                   onSelectRule={rule => openRulesForm(rule)}
                   onDeleteRule={id => deleteRule(id)}
@@ -62,7 +66,8 @@ export default function OptionsPage() {
           </div>
         </div>
       </div>
-      {isFormOpen && <RuleForm initialRule={editingRule} onSave={d => handleSave(d)} onCancel={closeForm} />}
+
+      <RuleFormDialog initialRule={editingRule} onSave={d => handleSave(d)} onCancel={closeForm} open={isFormOpen} />
     </div>
   );
 }

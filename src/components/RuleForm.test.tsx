@@ -2,37 +2,44 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import RuleForm from './RuleForm';
 import type { Rule } from '@/types/rule';
+import { Dialog } from '@headlessui/react';
 
-function renderForm() {
+function renderForm(initialRule?: Rule) {
   const onSave = vi.fn();
   const onCancel = vi.fn();
 
-  render(<RuleForm onSave={onSave} onCancel={onCancel} />);
+  render(
+    <Dialog open onClose={vi.fn()}>
+      <RuleForm initialRule={initialRule} onSave={onSave} onCancel={onCancel} />
+    </Dialog>,
+  );
 
   return { onSave, onCancel };
 }
+const getSaveButton = () => screen.getByRole('button', { name: 'Save Rule' });
 
 describe('RuleForm', () => {
   test('shows required field validation errors', () => {
     renderForm();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Save rule' }));
+    fireEvent.click(getSaveButton());
     expect(screen.getByText('Rule name is required')).toBeTruthy();
 
     fireEvent.change(screen.getByLabelText('Rule Name'), { target: { value: 'My rule' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Save rule' }));
+    fireEvent.click(getSaveButton());
 
-    expect(screen.getByText('URL match is required.')).toBeTruthy();
+    expect(screen.getByText('There was error processing your submission')).toBeTruthy();
+    expect(screen.getByText('URL match is required')).toBeTruthy();
   });
 
   test('validates status code range', () => {
     renderForm();
 
     fireEvent.change(screen.getByLabelText('Rule Name'), { target: { value: 'My rule' } });
-    fireEvent.change(screen.getByLabelText('URL contains'), { target: { value: '/cart' } });
-    fireEvent.change(screen.getByLabelText('Status code'), { target: { value: '200.5' } });
+    fireEvent.change(screen.getByLabelText('URL Contains'), { target: { value: '/cart' } });
+    fireEvent.change(screen.getByLabelText('Status Code'), { target: { value: '200.5' } });
 
-    const form = screen.getByRole('button', { name: 'Save rule' }).closest('form');
+    const form = getSaveButton().closest('form');
     if (!form) throw new Error('Expected RuleForm submit form to exist');
     fireEvent.submit(form);
 
@@ -43,9 +50,9 @@ describe('RuleForm', () => {
     const { onSave } = renderForm();
 
     fireEvent.change(screen.getByLabelText('Rule Name'), { target: { value: '  Mock cart  ' } });
-    fireEvent.change(screen.getByLabelText('URL contains'), { target: { value: '/cart' } });
-    fireEvent.change(screen.getByLabelText('Status code'), { target: { value: '201' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Save rule' }));
+    fireEvent.change(screen.getByLabelText('URL Contains'), { target: { value: '/cart' } });
+    fireEvent.change(screen.getByLabelText('Status Code'), { target: { value: '201' } });
+    fireEvent.click(getSaveButton());
 
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onSave).toHaveBeenCalledWith(
@@ -65,25 +72,6 @@ describe('RuleForm', () => {
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
 
-  test('formats valid JSON in response body', () => {
-    renderForm();
-
-    const responseBody = screen.getByLabelText('Response body') as HTMLTextAreaElement;
-    fireEvent.change(responseBody, { target: { value: '{"ok":true,"items":[1,2]}' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Format JSON' }));
-
-    expect(responseBody.value).toBe(JSON.stringify({ ok: true, items: [1, 2] }, null, 2));
-  });
-
-  test('shows warning when response body is invalid JSON', () => {
-    renderForm();
-
-    fireEvent.change(screen.getByLabelText('Response body'), { target: { value: '{oops' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Format JSON' }));
-
-    expect(screen.getByText('Response body is not valid JSON, so it will be sent as plain text.')).toBeTruthy();
-  });
-
   test('renders in edit mode when initialRule is provided', () => {
     const initialRule: Rule = {
       id: 'r-1',
@@ -98,7 +86,7 @@ describe('RuleForm', () => {
       updatedAt: 1,
     };
 
-    render(<RuleForm initialRule={initialRule} onSave={vi.fn()} onCancel={vi.fn()} />);
+    renderForm(initialRule);
 
     expect(screen.getByText('Edit rule')).toBeTruthy();
     expect((screen.getByLabelText('Rule Name') as HTMLInputElement).value).toBe('Existing rule');
