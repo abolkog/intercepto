@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/abolkog/intercepto/compare/v1.0.0...v1.1.0) (2026-08-29)
+
+### Features
+
+- implement import/export functionality for rules and add validation tests ([1908815](https://github.com/abolkog/intercepto/commit/1908815139c395fc1e9d0b12dd101e9ad20f5d51))
+- integrate RuleForm with Dialog component and enhance form functionality ([a788042](https://github.com/abolkog/intercepto/commit/a788042a1d7a67c7784f640ca81847b053fda0e5))
+- replace RulesTable with RulesList component and implement rule duplication functionality ([e2cdfa0](https://github.com/abolkog/intercepto/commit/e2cdfa062a8a742523f8b8d7b511486b707510fe))
+
 # 1.0.0 (2026-08-24)
 
 ### Features
