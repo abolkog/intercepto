@@ -5,7 +5,8 @@ export const RULES_STORAGE_KEY = 'intercepto_rules';
 
 export async function getRules(): Promise<Rule[]> {
   const data = await chrome.storage.local.get(RULES_STORAGE_KEY);
-  return (data[RULES_STORAGE_KEY] as Rule[] | undefined) ?? [];
+  const rules = (data[RULES_STORAGE_KEY] as Rule[] | undefined) ?? [];
+  return rules.sort((a, b) => b.createdAt - a.createdAt);
 }
 
 export async function saveRules(rules: Rule[]): Promise<void> {

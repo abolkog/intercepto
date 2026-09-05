@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import Header from '@/components/Header';
 import RulesList from '@/components/RulesList';
 import useRules from '@/hooks/useRules';
+import useSelectedRuleFromPopup from '@/hooks/useSelectedRuleFromPopup';
 import { Rule, RuleDraft } from '@/types/rule';
 import RuleFormDialog from '@/components/RuleFormDialog';
 import { addRule, deleteRule, updateRule } from '@/utils/ruleStorage';
@@ -24,6 +25,8 @@ export default function OptionsPage() {
     setEditingRule(rule);
     setIsFormOpen(true);
   };
+
+  useSelectedRuleFromPopup({ rules, onSelectRule: openRulesForm });
 
   const handleSave = async (draft: RuleDraft) => {
     if (editingRule) {
