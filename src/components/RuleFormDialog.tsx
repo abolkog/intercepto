@@ -20,7 +20,7 @@ export default function RuleFormDialog({ initialRule, onSave, onCancel, open }: 
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
             <DialogPanel
               transition
-              className="pointer-events-auto w-screen max-w-6xl transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+              className="pointer-events-auto w-screen max-w-3xl transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
             >
               <RuleForm key={initialRule?.id ?? 'new'} initialRule={initialRule} onSave={onSave} onCancel={onCancel} />
             </DialogPanel>

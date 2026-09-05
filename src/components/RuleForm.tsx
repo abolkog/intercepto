@@ -3,10 +3,13 @@ import { DialogTitle } from '@headlessui/react';
 import { XMarkIcon, XCircleIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
-import { dracula } from '@uiw/codemirror-theme-dracula';
+import { aura } from '@uiw/codemirror-theme-aura';
 
 import { HTTP_METHODS } from '@/constants';
 import { Rule, RuleDraft } from '@/types/rule';
+import { TextField } from './TextField';
+import { SelectField } from './SelectField';
+import Toggle from './Toggle';
 
 type RuleFormProps = {
   initialRule?: Rule;
@@ -118,173 +121,89 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
         )}
 
         {/* Divider container */}
-        <div className="space-y-6 py-6 sm:space-y-0 sm:divide-y sm:divide-white/10 sm:py-0">
+        <div className="space-y-6 py-6 px-6 sm:space-y-0  sm:py-0">
           {/* Rule name */}
-          <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-            <div>
-              <label htmlFor="name" className="block text-sm/6 font-medium text-white sm:mt-1.5">
-                Rule Name
-              </label>
-            </div>
-            <div className="sm:col-span-2">
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={draft.name}
-                onChange={e => update('name', e.target.value)}
-                placeholder="e.g, Mock empty cart"
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-purple-500 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-purple-600 sm:text-sm/6"
-              />
-            </div>
-          </div>
+          <TextField
+            id="name"
+            label="Rule Name"
+            value={draft.name}
+            onChange={value => update('name', value)}
+            placeholder="e.g, Mock empty cart"
+          />
 
           {/* url */}
-          <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-            <div>
-              <label htmlFor="urlMatch" className="block text-sm/6 font-medium text-white sm:mt-1.5">
-                URL Contains
-              </label>
-            </div>
-            <div className="sm:col-span-2">
-              <input
-                id="urlMatch"
-                name="urlMatch"
-                type="text"
-                value={draft.urlMatch}
-                onChange={e => update('urlMatch', e.target.value)}
-                placeholder="/cart"
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-purple-500 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-purple-600 sm:text-sm/6"
-              />
-            </div>
-          </div>
+          <TextField
+            id="urlMatch"
+            label="URL Contains"
+            variant="secondary"
+            value={draft.urlMatch}
+            onChange={value => update('urlMatch', value)}
+            placeholder="/cart"
+          />
 
-          {/* method */}
-          <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-            <div>
-              <label htmlFor="method" className="block text-sm/6 font-medium text-white sm:mt-1.5">
-                Http Method
-              </label>
-            </div>
-            <div className="sm:col-span-2">
-              <select
-                id="method"
-                name="method"
-                value={draft.method}
-                onChange={e => update('method', e.target.value as RuleDraft['method'])}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-purple-500 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-purple-600 sm:text-sm/6"
-              >
-                {HTTP_METHODS.map(method => (
-                  <option key={method} value={method}>
-                    {method}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <div className="grid grid-cols-2 space-x-10">
+            {/* method */}
+            <SelectField
+              id="method"
+              label="HTTP method"
+              value={draft.method}
+              onChange={value => update('method', value as RuleDraft['method'])}
+              options={HTTP_METHODS.map(m => ({ label: m === '*' ? 'Any(*)' : m, value: m }))}
+            />
 
-          {/* status code */}
-          <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-            <div>
-              <label htmlFor="statusCode" className="block text-sm/6 font-medium text-white sm:mt-1.5">
-                Status Code
-              </label>
-            </div>
-            <div className="sm:col-span-2">
-              <input
-                id="statusCode"
-                type="number"
-                name="statusCode"
-                min={100}
-                max={599}
-                value={draft.statusCode}
-                onChange={e => update('statusCode', Number(e.target.value))}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-purple-500 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-purple-600 sm:text-sm/6"
-              />
-            </div>
+            {/* statusCode */}
+            <TextField
+              id="statusCode"
+              label="Status Code"
+              type="number"
+              value={draft.statusCode}
+              onChange={value => update('statusCode', Number(value))}
+              placeholder="200"
+              min={100}
+              max={599}
+            />
           </div>
 
           {/* response body */}
-          <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-            <div>
-              <label htmlFor="responseBody" className="block text-sm/6 font-medium text-white sm:mt-1.5">
-                Response Body
-              </label>
+          <div className="space-y-2 py-4 ">
+            <label htmlFor="responseBody" className="block text-sm font-medium text-gray-400">
+              Response Body
+            </label>
+            <div className="flex justify-end px-2 mb-1">
+              <button type="button" onClick={formatBody} className="cursor-pointer" aria-label="Format JSON">
+                <CodeBracketIcon className="size-4 text-white" />
+              </button>
             </div>
-            <div className="sm:col-span-2">
-              <div className="flex justify-end px-2 mb-1">
-                <button type="button" onClick={formatBody} className="cursor-pointer" aria-label="Format JSON">
-                  <CodeBracketIcon className="size-4 text-white" />
-                </button>
-              </div>
-              <div className="text-sm">
-                <CodeMirror
-                  value={draft.responseBody}
-                  height="200px"
-                  extensions={[json(), responseBodyAriaLabel]}
-                  theme={dracula}
-                  onChange={value => update('responseBody', value)}
-                />
-              </div>
+            <div className="text-sm">
+              <CodeMirror
+                id="responseBody"
+                value={draft.responseBody}
+                height="300px"
+                extensions={[json(), responseBodyAriaLabel]}
+                theme={aura}
+                onChange={value => update('responseBody', value)}
+              />
             </div>
           </div>
 
-          {/* settings */}
-          <fieldset className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
-            <legend className="sr-only">Settings</legend>
-            <div aria-hidden="true" className="text-sm/6 font-medium text-white">
-              Settings
-            </div>
-            <div className="space-y-5 sm:col-span-2">
-              <div className="space-y-5 sm:mt-0">
-                {/* Enable/Disable */}
-                <div className="relative flex items-start">
-                  <div className="absolute flex h-6 items-center">
-                    <input
-                      id="enabled"
-                      type="checkbox"
-                      name="enabled"
-                      checked={draft.enabled}
-                      onChange={e => update('enabled', e.target.checked)}
-                      aria-describedby="enabled-description"
-                      className="relative size-4 appearance-none rounded-full border border-white/20 bg-black/10 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-purple-500 checked:bg-purple-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 disabled:border-white/10 disabled:bg-gray-800 disabled:before:bg-white/20 forced-colors:appearance-auto forced-colors:before:hidden"
-                    />
-                  </div>
-                  <div className="pl-7 text-sm/6">
-                    <label htmlFor="enabled" className="font-medium text-white">
-                      Enable
-                    </label>
-                    <p id="enabled-description" className="text-gray-400">
-                      Enable this rule.
-                    </p>
-                  </div>
-                </div>
+          {/* Enable/Disable */}
+          <div className="flex justify-between py-4 ">
+            <label htmlFor="enabled" className="block text-sm font-medium text-gray-400">
+              Enable this rule.
+            </label>
+            <Toggle checked={draft.enabled} onChange={checked => update('enabled', checked)} name="enabled" />
+          </div>
 
-                {/* Notifications */}
-                <div className="relative flex items-start">
-                  <div className="absolute flex h-6 items-center">
-                    <input
-                      id="showNotifications"
-                      type="checkbox"
-                      name="showNotifications"
-                      checked={draft.showNotifications}
-                      onChange={e => update('showNotifications', e.target.checked)}
-                      aria-describedby="showNotifications-description"
-                      className="relative size-4 appearance-none rounded-full border border-white/20 bg-black/10 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-purple-500 checked:bg-purple-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 disabled:border-white/10 disabled:bg-gray-800 disabled:before:bg-white/20 forced-colors:appearance-auto forced-colors:before:hidden"
-                    />
-                  </div>
-                  <div className="pl-7 text-sm/6">
-                    <label htmlFor="enabled" className="font-medium text-white">
-                      Show Notifications
-                    </label>
-                    <p id="enabled-description" className="text-gray-400">
-                      Show notifications message when the rule is triggered
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </fieldset>
+          <div className="flex justify-between py-4 ">
+            <label htmlFor="showNotifications" className="block text-sm font-medium text-gray-400">
+              Show notifications message when the rule is triggered
+            </label>
+            <Toggle
+              checked={draft.showNotifications}
+              onChange={checked => update('showNotifications', checked)}
+              name="showNotifications"
+            />
+          </div>
         </div>
       </div>
 
