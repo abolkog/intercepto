@@ -1,117 +1,49 @@
-# Intercepto
+<p align="center">
+  <a href="https://abolkog.github.io/intercepto/index.html" target="_blank" rel="noreferrer noopener">
+    <picture>
+      <img
+        alt="Intercepto Logo"
+        src="./src/assets/Intercepto.png"
+        width="42%"
+      />
+    </picture>
+  </a>
+</p>
 
 Intercepto is a Chrome extension for mocking API calls in the browser.
 It matches requests by URL and HTTP method, then returns custom status codes
 and response bodies directly from extension rules.
 
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/intercepto/mdgonajbjgpgemlcocmkdjegoplalbfo"><strong>Get The Extension</strong></a> ·
+  <a href="https://github.com/abolkog/intercepto/issues/new/choose"><strong>Report a bug</strong></a> ·
+</p>
+
 ## Features
 
-- Rule-based request matching by URL and HTTP method
-- Mock custom status codes and JSON or text responses
-- Works with page requests made through fetch and XMLHttpRequest
-- Popup and options UIs for managing rules
-- Built with React, TypeScript, Vite, and CRXJS
+| Feature                | What it does                                                   |
+| ---------------------- | -------------------------------------------------------------- |
+| 🎯 Rule-Based Matching | Match requests by URL pattern and HTTP method                  |
+| 🧾 Custom Responses    | Return custom status codes with JSON or text bodies            |
+| 🌐 Fetch & XHR Support | Works with page requests made through fetch and XMLHttpRequest |
+| 🖥️ Popup & Options UI  | Manage all your rules from a simple, dedicated UI              |
+| 💾 Local Storage       | Everything is stored locally — nothing leaves your browser     |
+| 📖 Open Source         | Free to use, inspect, and contribute to                        |
 
-## Quick Start
+## Why developers pick Intercepto
 
-1. Install dependencies:
+- 🔒 **Everything Stays Local:** No accounts, no cloud sync. Your rules live in your browser, under your control.
+- ⚡ **Lightweight & Fast:** No servers to run, no proxies to configure. Just create a rule and go.
+- 🆓 **Free & Open Source:** No tiers, no limits, no paywalls. Ever.
 
-```bash
-npm install
-```
+> "Mock any API response without touching a line of backend code."
 
-2. Start development server:
+Rule-based API mocking, right in your browser. **No backend changes required.**
 
-```bash
-npm run dev
-```
+## Contributing
 
-3. Open Chrome and navigate to `chrome://extensions/`, enable "Developer mode", and load the unpacked extension from the `dist` directory.
-
-4. Build for production:
-
-```bash
-npm run build
-```
-
-## Usage
-
-1. Create a rule in the options page.
-2. Set the request URL match and HTTP method.
-3. Set the response status code and body.
-4. Enable the rule.
-5. Open a page that makes a matching request and Intercepto will return the mocked response.
-
-## Project Structure
-
-- `src/popup/` - Popup UI
-- `src/options/` - Options page UI
-- `src/content/` - Content scripts and request interception
-- `src/components/` - Shared UI components
-- `src/utils/` - Storage, notifications, and helper logic
-- `manifest.config.ts` - Chrome extension manifest configuration
-
-## Automated Releases
-
-This project uses semantic-release with GitHub Actions.
-
-- Push commits to `main` using Conventional Commits.
-- `.github/workflows/release.yml` runs tests, calculates the next version, updates `CHANGELOG.md`, creates a Git tag, and publishes a GitHub release.
-- During release preparation, `npm run build` runs and produces a zip package in `release/`.
-- `.github/workflows/publish-chrome.yml` triggers on published GitHub releases and uploads the generated zip to the Chrome Web Store.
-
-Required repository secrets for Chrome Web Store publishing:
-
-- `CHROME_EXTENSION_ID`
-- `CHROME_CLIENT_ID`
-- `CHROME_CLIENT_SECRET`
-- `CHROME_REFRESH_TOKEN`
-
-Useful local commands:
-
-```bash
-npm run release:dry-run
-npm run release
-```
-
-## Commit Message Guide
-
-This project uses Conventional Commits so semantic-release can determine version bumps automatically.
-
-Version bump rules:
-
-- `fix:` triggers a patch release (`1.0.0` -> `1.0.1`)
-- `feat:` triggers a minor release (`1.0.0` -> `1.1.0`)
-- breaking changes trigger a major release (`1.0.0` -> `2.0.0`)
-
-Examples:
-
-```text
-fix: correct toast icon path in content notification
-feat: add rule-level notification toggle
-feat(popup): add quick enable switch for latest rule
-chore: update eslint config
-```
-
-Breaking change examples:
-
-```text
-feat: redesign rule schema
-
-BREAKING CHANGE: rename method field to httpMethod in stored rules
-```
-
-```text
-feat!: remove legacy rule migration path
-```
-
-## PR Checklist
-
-- Commit messages follow Conventional Commits (`feat:`, `fix:`, `chore:`, etc.)
-- Any breaking change uses `!` in the header or includes a `BREAKING CHANGE:` footer
-- `npm test` passes locally
-- `npm run build` passes locally
-- User-facing changes are documented in the PR description
+Want to run Intercepto locally, submit a PR, or understand the release process?
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

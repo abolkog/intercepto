@@ -1,0 +1,25 @@
+name: ❓ Question
+description: Ask a question about using or configuring Intercepto
+title: 'question: <short description>'
+labels: ['question']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about how to use Intercepto? Ask away.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What would you like to know?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What are you trying to achieve? Include relevant rule configs, screenshots, etc. if helpful.
+    validations:
+      required: false
