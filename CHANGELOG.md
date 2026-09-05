@@ -1,3 +1,18 @@
+# [1.2.0](https://github.com/abolkog/intercepto/compare/v1.1.0...v1.2.0) (2026-09-05)
+
+### Bug Fixes
+
+- **site:** fix missing base path from site config ([7b99627](https://github.com/abolkog/intercepto/commit/7b9962762db02eea1dc5be52ce015e23e5cdab00))
+- **site:** hide nav button on mobile ([2ea7fdc](https://github.com/abolkog/intercepto/commit/2ea7fdcbb42d08c9bd0d6d79e5ee29b8c95db755))
+- **tsconfig:** correct paths configuration and remove deprecated options ([dec663b](https://github.com/abolkog/intercepto/commit/dec663bd9b93f041264bdd298d951358cb6e567a))
+
+### Features
+
+- **ext:** display matched URL in rule notification toast message ([3cd48b2](https://github.com/abolkog/intercepto/commit/3cd48b257157ae4f29f2ee29fa99a430fff97fa4))
+- **ext:** enhance RulesList component with optional menu and add selected rule handling ([52bd036](https://github.com/abolkog/intercepto/commit/52bd036fec4b955fac9e64f604712bdff1ff76cc))
+- **ext:** simply the rule forms ui ([028ef91](https://github.com/abolkog/intercepto/commit/028ef911a6306e5fb262c14fbb405bbb992183f1))
+- **site:** add extension github pages site ([e8de440](https://github.com/abolkog/intercepto/commit/e8de4404149512bfce71897fb02207712521f6df))
+
 # [1.1.0](https://github.com/abolkog/intercepto/compare/v1.0.0...v1.1.0) (2026-08-29)
 
 ### Features
