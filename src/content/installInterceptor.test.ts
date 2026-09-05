@@ -35,7 +35,7 @@ describe('installInterceptor', () => {
     dispatchRulesUpdate([
       {
         id: 'r-1',
-        name: 'Mock empty cart',
+        name: 'Mock TV shows',
         enabled: true,
         showNotifications: true,
         urlMatch: '/shows',
@@ -58,8 +58,9 @@ describe('installInterceptor', () => {
       {
         source: INTERCEPTO_MESSAGE_SOURCE,
         type: INTERCEPTO_RULE_MATCHED,
-        ruleName: 'Mock empty cart',
+        ruleName: 'Mock TV shows',
         method: 'GET',
+        url: '/shows',
       },
       '*',
     );
@@ -78,7 +79,7 @@ describe('installInterceptor', () => {
     dispatchRulesUpdate([
       {
         id: 'r-2',
-        name: 'Mock empty cart',
+        name: 'Mock TV shows',
         enabled: true,
         showNotifications: false,
         urlMatch: '/shows',
@@ -109,8 +110,9 @@ describe('installInterceptor', () => {
       {
         source: INTERCEPTO_MESSAGE_SOURCE,
         type: INTERCEPTO_RULE_MATCHED,
-        ruleName: 'Mock empty cart',
+        ruleName: 'Mock TV shows',
         method: 'GET',
+        url: '/shows',
       },
       '*',
     );

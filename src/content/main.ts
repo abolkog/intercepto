@@ -59,7 +59,7 @@ window.addEventListener('message', (event: MessageEvent<InterceptoRuleMatchedMes
   if (!event.data || event.data.source !== INTERCEPTO_MESSAGE_SOURCE) return;
   if (event.data.type !== INTERCEPTO_RULE_MATCHED) return;
 
-  notifyRuleMatched(event.data.ruleName, event.data.method);
+  notifyRuleMatched(event.data.ruleName, event.data.method, event.data.url);
 });
 
 onRulesChanged(rules => {

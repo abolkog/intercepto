@@ -47,6 +47,7 @@ export function installInterceptor(): void {
       type: INTERCEPTO_RULE_MATCHED,
       ruleName: rule.name,
       method: rule.method,
+      url: rule.urlMatch,
     };
 
     window.postMessage(message, '*');

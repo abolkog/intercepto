@@ -21,6 +21,7 @@ export type InterceptoRuleMatchedMessage = {
   source: typeof INTERCEPTO_MESSAGE_SOURCE;
   type: typeof INTERCEPTO_RULE_MATCHED;
   ruleName: string;
+  url: string;
   method: Rule['method'];
 };
 

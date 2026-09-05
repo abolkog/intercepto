@@ -128,10 +128,11 @@ describe('content main bridge', () => {
           type: INTERCEPTO_RULE_MATCHED,
           ruleName: 'Mock empty cart',
           method: 'GET',
+          url: '/cart',
         },
       }),
     );
 
-    expect(notifyRuleMatchedMock).toHaveBeenCalledWith('Mock empty cart', 'GET');
+    expect(notifyRuleMatchedMock).toHaveBeenCalledWith('Mock empty cart', 'GET', '/cart');
   });
 });
