@@ -36,7 +36,7 @@ export default function Header() {
             Open source
           </button>
         </nav>
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <GithubButton label="Source" />
 
           <GetExtensionButton label="Install extension" />
