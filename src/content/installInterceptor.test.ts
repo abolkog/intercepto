@@ -44,6 +44,7 @@ describe('installInterceptor', () => {
         responseBody: '{"mocked":true}',
         createdAt: 1,
         updatedAt: 1,
+        delayMs: 0,
       },
     ]);
     await Promise.resolve();
@@ -88,6 +89,7 @@ describe('installInterceptor', () => {
         responseBody: '{"xhr":true}',
         createdAt: 1,
         updatedAt: 1,
+        delayMs: 0,
       },
     ]);
     await Promise.resolve();

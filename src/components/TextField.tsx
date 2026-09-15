@@ -5,6 +5,7 @@ interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id
   label: string;
   value: string | number;
   variant?: 'default' | 'secondary';
+  description?: string;
   onChange: (value: string) => void;
 }
 
@@ -15,6 +16,7 @@ export function TextField({
   onChange,
   className,
   variant = 'default',
+  description,
   ...inputProps
 }: TextFieldProps) {
   const textColor = variant === 'default' ? 'text-white' : 'text-purple-300';
@@ -31,6 +33,11 @@ export function TextField({
         className={`block w-full rounded-md bg-white/5 px-4 py-3 text-base ${textColor} outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-purple-500 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-purple-600 ${className ?? ''}`}
         {...inputProps}
       />
+      {description && (
+        <p id={`${id}-description`} className="mt-2 text-sm text-gray-400">
+          {description}
+        </p>
+      )}
     </div>
   );
 }

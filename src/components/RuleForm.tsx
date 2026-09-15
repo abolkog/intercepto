@@ -24,6 +24,7 @@ const emptyDraft: RuleDraft = {
   urlMatch: '',
   method: '*',
   statusCode: 200,
+  delayMs: 0,
   responseBody: '{\n  \n}',
 };
 
@@ -86,7 +87,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
               <DialogTitle className="text-base font-semibold text-white">
                 {isEditing ? 'Edit rule' : 'New rule'}
               </DialogTitle>
-              <p className="text-sm text-gray-400">Create or update a rule.</p>
+              <p className="text-sm text-gray-400">Mock the response for requests that match a URL</p>
             </div>
             <div className="flex h-7 items-center">
               <button
@@ -128,7 +129,7 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
             label="Rule Name"
             value={draft.name}
             onChange={value => update('name', value)}
-            placeholder="e.g, Mock empty cart"
+            placeholder="e.g. Mock empty cart"
           />
 
           {/* url */}
@@ -139,16 +140,17 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
             value={draft.urlMatch}
             onChange={value => update('urlMatch', value)}
             placeholder="/cart"
+            description="Substring match on the full request URL. /api/cart matches https://shop.com/api/cart?id=2"
           />
 
-          <div className="grid grid-cols-2 space-x-10">
+          <div className="grid grid-cols-3 space-x-10">
             {/* method */}
             <SelectField
               id="method"
-              label="HTTP method"
+              label="HTTP Method"
               value={draft.method}
               onChange={value => update('method', value as RuleDraft['method'])}
-              options={HTTP_METHODS.map(m => ({ label: m === '*' ? 'Any(*)' : m, value: m }))}
+              options={HTTP_METHODS.map(m => ({ label: m === '*' ? 'Any' : m, value: m }))}
             />
 
             {/* statusCode */}
@@ -161,6 +163,18 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
               placeholder="200"
               min={100}
               max={599}
+            />
+
+            {/* Delay */}
+            <TextField
+              id="delay"
+              label="Delay"
+              type="number"
+              value={draft.delayMs ?? 0}
+              onChange={value => update('delayMs', Number(value))}
+              placeholder="0"
+              min={0}
+              description="Add delay to the response. Value is in milliseconds"
             />
           </div>
 
@@ -189,14 +203,14 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
           {/* Enable/Disable */}
           <div className="flex justify-between py-4 ">
             <label htmlFor="enabled" className="block text-sm font-medium text-gray-400">
-              Enable this rule.
+              Enable this rule
             </label>
             <Toggle checked={draft.enabled} onChange={checked => update('enabled', checked)} name="enabled" />
           </div>
 
           <div className="flex justify-between py-4 ">
             <label htmlFor="showNotifications" className="block text-sm font-medium text-gray-400">
-              Show notifications message when the rule is triggered
+              Show notification when the rule is triggered
             </label>
             <Toggle
               checked={draft.showNotifications}

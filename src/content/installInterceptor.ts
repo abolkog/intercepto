@@ -64,6 +64,8 @@ export function installInterceptor(): void {
     state.rules = [...event.data.rules].sort((a, b) => b.updatedAt - a.updatedAt);
   };
 
+  const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+
   const originalFetch = window.fetch.bind(window);
   const originalXhrOpen = XMLHttpRequest.prototype.open;
   const originalXhrSend = XMLHttpRequest.prototype.send;
@@ -83,6 +85,11 @@ export function installInterceptor(): void {
     }
 
     notifyRuleMatched(matchedRule);
+
+    const delayMs = Math.max(0, matchedRule.delayMs ?? 0);
+    if (delayMs > 0) {
+      await sleep(delayMs);
+    }
 
     const body = matchedRule.responseBody ?? '';
     return new Response(body, {
@@ -134,7 +141,7 @@ export function installInterceptor(): void {
     this.getAllResponseHeaders = () => `content-type: ${contentType}\r\n`;
     this.getResponseHeader = (name: string) => (name.toLowerCase() === 'content-type' ? contentType : null);
 
-    queueMicrotask(() => {
+    const dispatchMockEvents = () => {
       this.dispatchEvent(new Event('readystatechange'));
       this.dispatchEvent(new ProgressEvent('load'));
       this.dispatchEvent(new ProgressEvent('loadend'));
@@ -142,7 +149,14 @@ export function installInterceptor(): void {
       this.onreadystatechange?.(new Event('readystatechange'));
       this.onload?.(new ProgressEvent('load'));
       this.onloadend?.(new ProgressEvent('loadend'));
-    });
+    };
+
+    const delayMs = Math.max(0, matchedRule.delayMs ?? 0);
+    if (delayMs > 0) {
+      setTimeout(dispatchMockEvents, delayMs);
+    } else {
+      queueMicrotask(dispatchMockEvents);
+    }
 
     return undefined;
   };

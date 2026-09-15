@@ -84,6 +84,7 @@ describe('RuleForm', () => {
       responseBody: '{}',
       createdAt: 1,
       updatedAt: 1,
+      delayMs: 0,
     };
 
     renderForm(initialRule);

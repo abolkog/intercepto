@@ -8,6 +8,7 @@ export type Rule = {
   urlMatch: string;
   method: HttpMethod;
   statusCode: number;
+  delayMs: number;
   responseBody: string;
   createdAt: number;
   updatedAt: number;
