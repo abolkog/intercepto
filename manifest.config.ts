@@ -3,9 +3,10 @@ import pkg from './package.json' with { type: 'json' };
 
 export default defineManifest({
   manifest_version: 3,
-  name: pkg.name,
+  name: 'Intercepto - API Mocking & Request Interceptor',
   version: pkg.version,
-  description: pkg.description,
+  description:
+    'Intercept and mock API calls instantly. Change status codes and JSON response bodies right in your browser. 100% local frontend testing tool',
   icons: {
     '16': 'public/icons/icon16.png',
     '48': 'public/icons/icon48.png',
