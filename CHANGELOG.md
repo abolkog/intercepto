@@ -1,3 +1,14 @@
+# [1.3.0](https://github.com/abolkog/intercepto/compare/v1.2.0...v1.3.0) (2026-09-16)
+
+### Bug Fixes
+
+- **ext:** consolidate mock rule data into single file ([7040274](https://github.com/abolkog/intercepto/commit/704027447ae8aa86f403db64240232d2c9e17436))
+
+### Features
+
+- **ext:** add delayMs property to rules and update related components ([e836371](https://github.com/abolkog/intercepto/commit/e836371f0943dc1e8065bcbcdce00c164a5be18a))
+- **ext:** add Tooltip component for enhanced UI interactions ([3234e6a](https://github.com/abolkog/intercepto/commit/3234e6a459e57f0f2dbf60201cfc65ec397e74dc))
+
 # [1.2.0](https://github.com/abolkog/intercepto/compare/v1.1.0...v1.2.0) (2026-09-05)
 
 ### Bug Fixes
