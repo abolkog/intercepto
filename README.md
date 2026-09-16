@@ -19,6 +19,16 @@ and response bodies directly from extension rules.
   <a href="https://github.com/abolkog/intercepto/issues/new/choose"><strong>Report a bug</strong></a> ·
 </p>
 
+<p align="center">
+    <picture>
+      <img
+        alt="Intercepto"
+        src="./assets/ui-sample.png"
+        width="60%"
+      />
+    </picture>
+</p>
+
 ## Features
 
 | Feature                | What it does                                                   |
