@@ -10,6 +10,7 @@ import { Rule, RuleDraft } from '@/types/rule';
 import { TextField } from './TextField';
 import { SelectField } from './SelectField';
 import Toggle from './Toggle';
+import Tooltip from './Tooltip';
 
 type RuleFormProps = {
   initialRule?: Rule;
@@ -180,13 +181,15 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
 
           {/* response body */}
           <div className="space-y-2 py-4 ">
-            <label htmlFor="responseBody" className="block text-sm font-medium text-gray-400">
-              Response Body
-            </label>
-            <div className="flex justify-end px-2 mb-1">
-              <button type="button" onClick={formatBody} className="cursor-pointer" aria-label="Format JSON">
-                <CodeBracketIcon className="size-4 text-white" />
-              </button>
+            <div className="flex items-center justify-between">
+              <label htmlFor="responseBody" className="block text-sm font-medium text-gray-400">
+                Response Body
+              </label>
+              <Tooltip content="Format JSON" position="left">
+                <button type="button" onClick={formatBody} className="cursor-pointer" aria-label="Format JSON">
+                  <CodeBracketIcon className="size-4 text-white" />
+                </button>
+              </Tooltip>
             </div>
             <div className="text-sm">
               <CodeMirror
