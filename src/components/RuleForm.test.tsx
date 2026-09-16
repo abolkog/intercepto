@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import RuleForm from './RuleForm';
 import type { Rule } from '@/types/rule';
 import { Dialog } from '@headlessui/react';
+import { mockRule } from '@/test-utils/mockData';
 
 function renderForm(initialRule?: Rule) {
   const onSave = vi.fn();
@@ -73,23 +74,9 @@ describe('RuleForm', () => {
   });
 
   test('renders in edit mode when initialRule is provided', () => {
-    const initialRule: Rule = {
-      id: 'r-1',
-      name: 'Existing rule',
-      enabled: true,
-      showNotifications: true,
-      urlMatch: '/orders',
-      method: 'GET',
-      statusCode: 200,
-      responseBody: '{}',
-      createdAt: 1,
-      updatedAt: 1,
-      delayMs: 0,
-    };
-
-    renderForm(initialRule);
+    renderForm(mockRule);
 
     expect(screen.getByText('Edit rule')).toBeTruthy();
-    expect((screen.getByLabelText('Rule Name') as HTMLInputElement).value).toBe('Existing rule');
+    expect((screen.getByLabelText('Rule Name') as HTMLInputElement).value).toBe('Mock tv shows');
   });
 });

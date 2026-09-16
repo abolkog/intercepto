@@ -50,6 +50,10 @@ export function validateRuleDraft(data: unknown, index: number): { draft: RuleDr
     return { error: `Entry ${index} ("${d.name}"): missing or invalid "responseBody"` };
   }
 
+  if (!Number.isInteger(d.delayMs) || (d.delayMs as number) < 0) {
+    return { error: `Entry ${index} ("${d.delayMs}"): "delayMs" must be an integer number` };
+  }
+
   return {
     draft: {
       name: d.name,
@@ -59,6 +63,7 @@ export function validateRuleDraft(data: unknown, index: number): { draft: RuleDr
       method: d.method as RuleDraft['method'],
       statusCode: d.statusCode as number,
       responseBody: d.responseBody,
+      delayMs: d.delayMs as number,
     },
   };
 }

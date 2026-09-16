@@ -6,6 +6,7 @@ import {
   INTERCEPTO_RULE_MATCHED,
   INTERCEPTO_RULES_UPDATE,
 } from '@/constants';
+import { mockRule } from '@/test-utils/mockData';
 
 const notifyRuleMatchedMock = vi.fn();
 
@@ -26,20 +27,7 @@ describe('content main bridge', () => {
 
   beforeEach(() => {
     onRulesChangedCallback = undefined;
-    getRulesMock.mockResolvedValue([
-      {
-        id: 'r-1',
-        name: 'Mock empty cart',
-        enabled: true,
-        showNotifications: true,
-        urlMatch: '/shows',
-        method: 'GET',
-        statusCode: 200,
-        responseBody: '{"ok":true}',
-        createdAt: 1,
-        updatedAt: 1,
-      },
-    ]);
+    getRulesMock.mockResolvedValue([mockRule]);
 
     onRulesChangedMock.mockImplementation(callback => {
       onRulesChangedCallback = callback;
@@ -89,20 +77,7 @@ describe('content main bridge', () => {
 
     await import('./main');
 
-    const updatedRules: Rule[] = [
-      {
-        id: 'r-2',
-        name: 'Mock empty cart',
-        enabled: true,
-        showNotifications: true,
-        urlMatch: '/cast',
-        method: 'GET',
-        statusCode: 201,
-        responseBody: '{"source":"update"}',
-        createdAt: 1,
-        updatedAt: 2,
-      },
-    ];
+    const updatedRules: Rule[] = [mockRule];
 
     if (!onRulesChangedCallback) throw new Error('Expected onRulesChanged callback to be registered');
     onRulesChangedCallback(updatedRules);

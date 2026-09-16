@@ -2,6 +2,7 @@ import { beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { type Rule } from '@/types/rule';
 import { installInterceptor } from './installInterceptor';
 import { INTERCEPTO_MESSAGE_SOURCE, INTERCEPTO_RULE_MATCHED, INTERCEPTO_RULES_UPDATE } from '@/constants';
+import { mockRule } from '@/test-utils/mockData';
 
 const originalFetchMock = vi.fn(async () => new Response('real-network', { status: 200 }));
 
@@ -32,34 +33,20 @@ describe('installInterceptor', () => {
   test('intercepts fetch for matching rule and returns mocked response', async () => {
     const postMessageSpy = vi.spyOn(window, 'postMessage').mockImplementation(() => undefined);
 
-    dispatchRulesUpdate([
-      {
-        id: 'r-1',
-        name: 'Mock TV shows',
-        enabled: true,
-        showNotifications: true,
-        urlMatch: '/shows',
-        method: 'GET',
-        statusCode: 201,
-        responseBody: '{"mocked":true}',
-        createdAt: 1,
-        updatedAt: 1,
-        delayMs: 0,
-      },
-    ]);
+    dispatchRulesUpdate([mockRule]);
     await Promise.resolve();
 
     const response = await window.fetch('https://api.tvmaze.com/shows/431/cast', { method: 'GET' });
 
-    expect(response.status).toBe(201);
-    expect(await response.text()).toBe('{"mocked":true}');
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('{"ok":true}');
     expect(response.headers.get('content-type')).toContain('application/json');
     expect(originalFetchMock).not.toHaveBeenCalled();
     expect(postMessageSpy).toHaveBeenCalledWith(
       {
         source: INTERCEPTO_MESSAGE_SOURCE,
         type: INTERCEPTO_RULE_MATCHED,
-        ruleName: 'Mock TV shows',
+        ruleName: 'Mock tv shows',
         method: 'GET',
         url: '/shows',
       },
@@ -77,21 +64,7 @@ describe('installInterceptor', () => {
   test('intercepts XMLHttpRequest for matching rule', async () => {
     const postMessageSpy = vi.spyOn(window, 'postMessage').mockImplementation(() => undefined);
 
-    dispatchRulesUpdate([
-      {
-        id: 'r-2',
-        name: 'Mock TV shows',
-        enabled: true,
-        showNotifications: false,
-        urlMatch: '/shows',
-        method: 'GET',
-        statusCode: 202,
-        responseBody: '{"xhr":true}',
-        createdAt: 1,
-        updatedAt: 1,
-        delayMs: 0,
-      },
-    ]);
+    dispatchRulesUpdate([mockRule]);
     await Promise.resolve();
 
     const xhr = new XMLHttpRequest();
@@ -105,14 +78,14 @@ describe('installInterceptor', () => {
 
     await loadEndPromise;
 
-    expect(xhr.status).toBe(202);
-    expect(xhr.responseText).toBe('{"xhr":true}');
+    expect(xhr.status).toBe(200);
+    expect(xhr.responseText).toBe('{"ok":true}');
     expect(xhr.getResponseHeader('content-type')).toContain('application/json');
     expect(postMessageSpy).toHaveBeenCalledWith(
       {
         source: INTERCEPTO_MESSAGE_SOURCE,
         type: INTERCEPTO_RULE_MATCHED,
-        ruleName: 'Mock TV shows',
+        ruleName: 'Mock tv shows',
         method: 'GET',
         url: '/shows',
       },

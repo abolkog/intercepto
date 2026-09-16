@@ -5,18 +5,10 @@ import useSelectedRuleFromPopup from './useSelectedRuleFromPopup';
 import { INTERCEPTO_SELECTED_RULE_ID_KEY } from '@/constants';
 import { type Rule } from '@/types/rule';
 import { chromeMock } from '@/test-utils/chromeMock';
+import { mockRule as mockRuleData } from '@/test-utils/mockData';
 
 const mockRule = (overrides: Partial<Rule> = {}): Rule => ({
-  id: 'r-1',
-  name: 'Mock rule',
-  enabled: true,
-  showNotifications: true,
-  urlMatch: '/test',
-  method: 'GET',
-  statusCode: 200,
-  responseBody: '{}',
-  createdAt: 1,
-  updatedAt: 1,
+  ...mockRuleData,
   ...overrides,
 });
 

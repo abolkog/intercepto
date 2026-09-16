@@ -24,6 +24,7 @@ export default function useRules() {
       method: rule.method,
       statusCode: rule.statusCode,
       responseBody: rule.responseBody,
+      delayMs: rule.delayMs,
     };
     await addRule(newRule);
   };

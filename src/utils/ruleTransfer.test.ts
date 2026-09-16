@@ -1,16 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import { parseRulesJson, validateRuleDraft } from './ruleTransfer';
+import { mockRuleDraft } from '@/test-utils/mockData';
 
 describe('validateRuleDraft', () => {
-  const valid = {
-    name: 'Mock cart',
-    enabled: true,
-    showNotifications: false,
-    urlMatch: '/cart',
-    method: 'GET',
-    statusCode: 200,
-    responseBody: '{}',
-  };
+  const valid = mockRuleDraft;
 
   test('accepts a fully valid entry', () => {
     const result = validateRuleDraft(valid, 0);
@@ -64,8 +57,8 @@ describe('validateRuleDraft', () => {
 describe('parseRulesJson', () => {
   test('parses a valid array of rules', () => {
     const json = JSON.stringify([
-      { name: 'A', urlMatch: '/a', method: 'GET', statusCode: 200, responseBody: '{}' },
-      { name: 'B', urlMatch: '/b', method: 'POST', statusCode: 201, responseBody: '{}' },
+      { name: 'A', urlMatch: '/a', method: 'GET', statusCode: 200, responseBody: '{}', delayMs: 0 },
+      { name: 'B', urlMatch: '/b', method: 'POST', statusCode: 201, responseBody: '{}', delayMs: 10 },
     ]);
 
     const result = parseRulesJson(json);
@@ -90,7 +83,7 @@ describe('parseRulesJson', () => {
 
   test('collects valid drafts and skips invalid entries, reporting errors for each', () => {
     const json = JSON.stringify([
-      { name: 'Good', urlMatch: '/ok', method: 'GET', statusCode: 200, responseBody: '{}' },
+      { name: 'Good', urlMatch: '/ok', method: 'GET', statusCode: 200, responseBody: '{}', delayMs: 10 },
       { name: 'Bad method', urlMatch: '/bad', method: 'BOGUS', statusCode: 200, responseBody: '{}' },
       { urlMatch: '/no-name', method: 'GET', statusCode: 200, responseBody: '{}' },
     ]);

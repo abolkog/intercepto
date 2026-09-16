@@ -3,6 +3,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import useRules from './useRules';
 import { getRules, onRulesChanged, setRuleEnabled, addRule } from '@/utils/ruleStorage';
 import { Rule } from '@/types/rule';
+import { mockRule as mockRuleData } from '@/test-utils/mockData';
 
 vi.mock('@/utils/ruleStorage', () => ({
   getRules: vi.fn(),
@@ -12,16 +13,7 @@ vi.mock('@/utils/ruleStorage', () => ({
 }));
 
 const mockRule = (overrides: Partial<Rule> = {}): Rule => ({
-  id: '1',
-  name: 'Mock Rule',
-  enabled: true,
-  showNotifications: false,
-  urlMatch: '/cart',
-  method: 'GET',
-  statusCode: 200,
-  responseBody: '{}',
-  createdAt: 1000,
-  updatedAt: 1000,
+  ...mockRuleData,
   ...overrides,
 });
 
@@ -104,13 +96,14 @@ describe('useRules', () => {
     const draftArg = vi.mocked(addRule).mock.calls[0][0];
 
     expect(draftArg).toEqual({
-      name: 'Copy of Original',
+      name: `Copy of ${original.name}`,
       enabled: original.enabled,
       showNotifications: original.showNotifications,
       urlMatch: original.urlMatch,
       method: original.method,
       statusCode: original.statusCode,
       responseBody: original.responseBody,
+      delayMs: original.delayMs,
     });
     expect(draftArg).not.toHaveProperty('id');
     expect(draftArg).not.toHaveProperty('createdAt');
