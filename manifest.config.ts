@@ -6,7 +6,7 @@ export default defineManifest({
   name: 'Intercepto - API Mocking & Request Interceptor',
   version: pkg.version,
   description:
-    'Intercept and mock API calls instantly. Change status codes and JSON response bodies right in your browser. 100% local frontend testing tool',
+    'Mock API calls instantly in your browser. Change status codes and JSON response bodies on the fly. 100% local frontend testing tool.',
   icons: {
     '16': 'public/icons/icon16.png',
     '48': 'public/icons/icon48.png',
