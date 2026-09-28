@@ -1,7 +1,7 @@
 import { PlusCircleIcon, ArrowUpTrayIcon, ArrowDownTrayIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
 import { useRef, useState } from 'react';
-import Header from '@/components/Header';
+import Header from '@/components/AppLogo';
 import RulesList from '@/components/RulesList';
 import useRules from '@/hooks/useRules';
 import useSelectedRuleFromPopup from '@/hooks/useSelectedRuleFromPopup';
