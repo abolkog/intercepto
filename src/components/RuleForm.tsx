@@ -14,12 +14,14 @@ import Tooltip from './Tooltip';
 
 type RuleFormProps = {
   initialRule?: Rule;
+  groups?: string[];
   onSave: (draft: RuleDraft) => void;
   onCancel: () => void;
 };
 
 const emptyDraft: RuleDraft = {
   name: '',
+  group: '',
   enabled: true,
   showNotifications: true,
   urlMatch: '',
@@ -31,8 +33,10 @@ const emptyDraft: RuleDraft = {
 
 const responseBodyAriaLabel = EditorView.contentAttributes.of({ 'aria-label': 'Response Body' });
 
-export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProps) {
-  const [draft, setDraft] = useState<RuleDraft>(initialRule ?? emptyDraft);
+export default function RuleForm({ initialRule, groups = [], onSave, onCancel }: RuleFormProps) {
+  const [draft, setDraft] = useState<RuleDraft>(
+    initialRule ? { ...initialRule, group: initialRule.group ?? '' } : emptyDraft,
+  );
   const [error, setError] = useState<string | null>(null);
   const isEditing = !!initialRule;
 
@@ -56,7 +60,12 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
 
     if (!formatBody()) return;
 
-    onSave({ ...draft, name: draft.name.trim() || draft.urlMatch });
+    const group = draft.group?.trim();
+    onSave({
+      ...draft,
+      name: draft.name.trim() || draft.urlMatch,
+      group: group ? group : undefined,
+    });
   };
 
   const update = <K extends keyof RuleDraft>(key: K, value: RuleDraft[K]) => {
@@ -131,6 +140,14 @@ export default function RuleForm({ initialRule, onSave, onCancel }: RuleFormProp
             value={draft.name}
             onChange={value => update('name', value)}
             placeholder="e.g. Mock empty cart"
+          />
+
+          <SelectField
+            id="group"
+            label="Group"
+            value={draft.group ?? ''}
+            onChange={value => update('group', value)}
+            options={[{ label: 'No Group', value: '' }, ...groups.map(group => ({ label: group, value: group }))]}
           />
 
           {/* url */}

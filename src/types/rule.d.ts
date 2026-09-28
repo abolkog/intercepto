@@ -3,6 +3,7 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 
 export type Rule = {
   id: string;
   name: string;
+  group?: string;
   enabled: boolean;
   showNotifications: boolean;
   urlMatch: string;
@@ -15,3 +16,8 @@ export type Rule = {
 };
 
 export type RuleDraft = Omit<Rule, 'id' | 'createdAt' | 'updatedAt'>;
+
+export type Group = {
+  name: string;
+  description?: string;
+};

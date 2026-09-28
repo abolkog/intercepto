@@ -1,7 +1,19 @@
 import type { Rule, RuleDraft } from '../types/rule';
+import { normaliseString, trimToUndefined } from './common';
 import { generateId } from './id';
 
 export const RULES_STORAGE_KEY = 'intercepto_rules';
+
+function normalizeRuleDraft(draft: RuleDraft): RuleDraft {
+  return {
+    ...draft,
+    group: trimToUndefined(draft.group),
+  };
+}
+
+function isRuleInGroup(rule: Rule, groupName: string): boolean {
+  return normaliseString(rule.group) === normaliseString(groupName);
+}
 
 export async function getRules(): Promise<Rule[]> {
   const data = await chrome.storage.local.get(RULES_STORAGE_KEY);
@@ -16,14 +28,15 @@ export async function saveRules(rules: Rule[]): Promise<void> {
 export async function addRule(draft: RuleDraft): Promise<Rule> {
   const rules = await getRules();
   const now = Date.now();
-  const rule: Rule = { ...draft, id: generateId(), createdAt: now, updatedAt: now };
+  const rule: Rule = { ...normalizeRuleDraft(draft), id: generateId(), createdAt: now, updatedAt: now };
   await saveRules([rule, ...rules]);
   return rule;
 }
 
 export async function updateRule(id: string, draft: RuleDraft): Promise<void> {
   const rules = await getRules();
-  const next = rules.map(rule => (rule.id === id ? { ...rule, ...draft, id, updatedAt: Date.now() } : rule));
+  const normalizedDraft = normalizeRuleDraft(draft);
+  const next = rules.map(rule => (rule.id === id ? { ...rule, ...normalizedDraft, id, updatedAt: Date.now() } : rule));
   await saveRules(next);
 }
 
@@ -35,6 +48,60 @@ export async function deleteRule(id: string): Promise<void> {
 export async function setRuleEnabled(id: string, enabled: boolean): Promise<void> {
   const rules = await getRules();
   const next = rules.map(rule => (rule.id === id ? { ...rule, enabled, updatedAt: Date.now() } : rule));
+  await saveRules(next);
+}
+
+export async function moveRulesToGroup(groupName: string, targetGroupName?: string): Promise<void> {
+  const nextGroup = trimToUndefined(targetGroupName);
+  const rules = await getRules();
+  const now = Date.now();
+
+  const next = rules.map(rule => {
+    if (!isRuleInGroup(rule, groupName)) return rule;
+    return {
+      ...rule,
+      group: nextGroup,
+      updatedAt: now,
+    };
+  });
+
+  await saveRules(next);
+}
+
+export async function deleteRulesInGroup(groupName: string): Promise<void> {
+  const rules = await getRules();
+  await saveRules(rules.filter(rule => !isRuleInGroup(rule, groupName)));
+}
+
+export async function setRulesInGroupEnabled(groupName: string, enabled: boolean): Promise<void> {
+  const rules = await getRules();
+  const now = Date.now();
+
+  const next = rules.map(rule => {
+    if (!isRuleInGroup(rule, groupName)) return rule;
+    return {
+      ...rule,
+      enabled,
+      updatedAt: now,
+    };
+  });
+
+  await saveRules(next);
+}
+
+export async function setRulesInGroupNotifications(groupName: string, showNotifications: boolean): Promise<void> {
+  const rules = await getRules();
+  const now = Date.now();
+
+  const next = rules.map(rule => {
+    if (!isRuleInGroup(rule, groupName)) return rule;
+    return {
+      ...rule,
+      showNotifications,
+      updatedAt: now,
+    };
+  });
+
   await saveRules(next);
 }
 

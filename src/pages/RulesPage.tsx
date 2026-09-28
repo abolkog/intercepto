@@ -1,35 +1,22 @@
-import { useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/20/solid';
 
 import RulesList from '@/components/RulesList';
+import RuleFormDialog from '@/components/RuleFormDialog';
+import GroupActionDialog from '@/components/rules/GroupActionDialog';
+import NewGroupDialog from '@/components/rules/NewGroupDialog';
+import useRuleGroupsManager from '@/hooks/useRuleGroupsManager';
 import useRules from '@/hooks/useRules';
 import useSelectedRuleFromPopup from '@/hooks/useSelectedRuleFromPopup';
-import { Rule, RuleDraft } from '@/types/rule';
-import RuleFormDialog from '@/components/RuleFormDialog';
-import { addRule, deleteRule, updateRule } from '@/utils/ruleStorage';
+import { deleteRule } from '@/utils/ruleStorage';
+
+import useRuleEditor from '@/hooks/useRuleEditor';
 
 export default function RulesPage() {
   const { rules, toggleRule, duplicateRule } = useRules();
-  const [editingRule, setEditingRule] = useState<Rule | undefined>(undefined);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const ruleGroupsManager = useRuleGroupsManager({ rules });
+  const ruleEditor = useRuleEditor();
 
-  const closeForm = () => setIsFormOpen(false);
-
-  const openRulesForm = (rule?: Rule) => {
-    setEditingRule(rule);
-    setIsFormOpen(true);
-  };
-
-  useSelectedRuleFromPopup({ rules, onSelectRule: openRulesForm });
-
-  const handleSave = async (draft: RuleDraft) => {
-    if (editingRule) {
-      await updateRule(editingRule.id, draft);
-    } else {
-      await addRule(draft);
-    }
-    setIsFormOpen(false);
-  };
+  useSelectedRuleFromPopup({ rules, onSelectRule: ruleEditor.openEdit });
 
   return (
     <>
@@ -41,9 +28,18 @@ export default function RulesPage() {
         <div className="mt-4 sm:mt-0 sm:ml-16 gap-3 flex ">
           <button
             type="button"
+            className="inline-flex items-center gap-x-1.5 rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
+            onClick={ruleGroupsManager.openNewGroupDialog}
+          >
+            New Group
+            <PlusCircleIcon aria-hidden="true" className="-mr-0.5 size-5" />
+          </button>
+
+          <button
+            type="button"
             className="inline-flex items-center gap-x-1.5 rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
 
-            onClick={() => openRulesForm()}
+            onClick={ruleEditor.openCreate}
           >
             New Rule
             <PlusCircleIcon aria-hidden="true" className="-mr-0.5 size-5" />
@@ -55,18 +51,33 @@ export default function RulesPage() {
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <RulesList
-              key={editingRule?.id ?? 'new'}
               rules={rules}
-              onSelectRule={rule => openRulesForm(rule)}
-              onDeleteRule={id => deleteRule(id)}
-              onToggleRule={(rule, status) => toggleRule(rule, status)}
-              onDuplicateRule={rule => duplicateRule(rule)}
+              groups={ruleGroupsManager.availableGroups}
+              onToggleGroupEnabled={ruleGroupsManager.onToggleGroupEnabled}
+              onToggleGroupNotifications={ruleGroupsManager.onToggleGroupNotifications}
+              onRenameGroup={ruleGroupsManager.openRenameGroup}
+              onMoveGroupRules={ruleGroupsManager.openMoveGroupRules}
+              onDeleteGroup={ruleGroupsManager.openDeleteGroup}
+              onSelectRule={ruleEditor.openEdit}
+              onDeleteRule={deleteRule}
+              onToggleRule={toggleRule}
+              onDuplicateRule={duplicateRule}
             />
           </div>
         </div>
       </div>
 
-      <RuleFormDialog initialRule={editingRule} onSave={d => handleSave(d)} onCancel={closeForm} open={isFormOpen} />
+      <RuleFormDialog
+        initialRule={ruleEditor.editingRule}
+        groups={ruleGroupsManager.availableGroupNames}
+        onCancel={ruleEditor.close}
+        open={ruleEditor.isOpen}
+        onSave={ruleEditor.save}
+      />
+
+      <NewGroupDialog {...ruleGroupsManager.newGroupDialogProps} />
+
+      <GroupActionDialog {...ruleGroupsManager.groupActionDialogProps} />
     </>
   );
 }

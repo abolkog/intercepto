@@ -18,6 +18,7 @@ export default function useRules() {
   const duplicateRule = async (rule: Rule) => {
     const newRule: RuleDraft = {
       name: `Copy of ${rule.name}`,
+      ...(rule.group ? { group: rule.group } : {}),
       enabled: rule.enabled,
       showNotifications: rule.showNotifications,
       urlMatch: rule.urlMatch,

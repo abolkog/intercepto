@@ -5,12 +5,13 @@ import RuleForm from './RuleForm';
 
 type RuleFormProps = {
   initialRule?: Rule;
+  groups?: string[];
   onSave: (draft: RuleDraft) => void;
   onCancel: () => void;
   open: boolean;
 };
 
-export default function RuleFormDialog({ initialRule, onSave, onCancel, open }: RuleFormProps) {
+export default function RuleFormDialog({ initialRule, groups, onSave, onCancel, open }: RuleFormProps) {
   return (
     <Dialog open={open} onClose={onCancel} className="relative z-10">
       <div className="fixed inset-0" />
@@ -22,7 +23,13 @@ export default function RuleFormDialog({ initialRule, onSave, onCancel, open }: 
               transition
               className="pointer-events-auto w-screen max-w-3xl transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
             >
-              <RuleForm key={initialRule?.id ?? 'new'} initialRule={initialRule} onSave={onSave} onCancel={onCancel} />
+              <RuleForm
+                key={initialRule?.id ?? 'new'}
+                initialRule={initialRule}
+                groups={groups}
+                onSave={onSave}
+                onCancel={onCancel}
+              />
             </DialogPanel>
           </div>
         </div>
