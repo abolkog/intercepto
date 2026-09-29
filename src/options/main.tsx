@@ -3,7 +3,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Route, Routes } from 'react-router';
 
-import Layout from '@/components/Layout.tsx';
+import Layout from '@/components/ui/Layout.tsx';
 import RulesPage from '@/pages/RulesPage';
 import ImportExportPage from '@/pages/ImportExportPage';
 

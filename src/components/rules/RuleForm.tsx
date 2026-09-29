@@ -7,10 +7,11 @@ import { aura } from '@uiw/codemirror-theme-aura';
 
 import { HTTP_METHODS } from '@/constants';
 import { Rule, RuleDraft } from '@/types/rule';
-import { TextField } from './TextField';
-import { SelectField } from './SelectField';
-import Toggle from './Toggle';
-import Tooltip from './Tooltip';
+import { TextField } from '../ui/TextField';
+import { SelectField } from '../ui/SelectField';
+import Toggle from '../ui/Toggle';
+import Tooltip from '../ui/Tooltip';
+import Button from '../ui/Button';
 
 type RuleFormProps = {
   initialRule?: Rule;
@@ -244,19 +245,10 @@ export default function RuleForm({ initialRule, groups = [], onSave, onCancel }:
       {/* Action buttons */}
       <div className="shrink-0 border-t border-white/10 px-4 py-5 sm:px-6">
         <div className="flex justify-end space-x-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-gray-100 inset-ring inset-ring-white/5 hover:bg-white/20 cursor-pointer"
-          >
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
-          <button
-            type="submit"
-            className="inline-flex justify-center rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
-          >
-            Save Rule
-          </button>
+          </Button>
+          <Button type="submit">Save Rule</Button>
         </div>
       </div>
     </form>

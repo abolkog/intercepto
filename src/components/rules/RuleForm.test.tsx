@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import RuleForm from './RuleForm';
+import RuleForm from '../RuleForm';
 import type { Rule } from '@/types/rule';
 import { Dialog } from '@headlessui/react';
 import { mockRule } from '@/test-utils/mockData';

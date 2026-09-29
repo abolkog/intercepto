@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import RuleMatchedToast from '@/components/RuleMatchedToast';
+import RuleMatchedToast from '@/components/rules/RuleMatchedToast';
 
 function getAppLogoUrl(): string {
   return typeof chrome !== 'undefined' && chrome.runtime?.getURL

@@ -9,7 +9,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/20/solid';
 
-import Toggle from '@/components/Toggle';
+import Toggle from '@/components/ui/Toggle';
 import { Rule } from '@/types/rule';
 
 type RulesGroupSectionProps = {

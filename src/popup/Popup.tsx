@@ -1,4 +1,4 @@
-import RulesList from '@/components/RulesList';
+import RulesList from '@/components/rules/RulesList';
 
 import useRules from '@/hooks/useRules';
 import { INTERCEPTO_SELECTED_RULE_ID_KEY } from '@/constants';

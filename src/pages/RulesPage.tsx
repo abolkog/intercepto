@@ -1,15 +1,16 @@
-import { PlusCircleIcon } from '@heroicons/react/20/solid';
+import { PlusCircleIcon, FolderPlusIcon } from '@heroicons/react/20/solid';
 
-import RulesList from '@/components/RulesList';
-import RuleFormDialog from '@/components/RuleFormDialog';
-import GroupActionDialog from '@/components/rules/GroupActionDialog';
-import NewGroupDialog from '@/components/rules/NewGroupDialog';
+import RulesList from '@/components/rules/RulesList';
+import RuleFormDialog from '@/components/rules/RuleFormDialog';
+import GroupActionDialog from '@/components/groups/GroupActionDialog';
+import NewGroupDialog from '@/components/groups/NewGroupDialog';
 import useRuleGroupsManager from '@/hooks/useRuleGroupsManager';
 import useRules from '@/hooks/useRules';
 import useSelectedRuleFromPopup from '@/hooks/useSelectedRuleFromPopup';
 import { deleteRule } from '@/utils/ruleStorage';
 
 import useRuleEditor from '@/hooks/useRuleEditor';
+import Button from '@/components/ui/Button';
 
 export default function RulesPage() {
   const { rules, toggleRule, duplicateRule } = useRules();
@@ -26,24 +27,13 @@ export default function RulesPage() {
           <p className="mt-2 text-sm text-gray-300">Manage existing rules or create a new one.</p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 gap-3 flex ">
-          <button
-            type="button"
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
-            onClick={ruleGroupsManager.openNewGroupDialog}
-          >
-            New Group
-            <PlusCircleIcon aria-hidden="true" className="-mr-0.5 size-5" />
-          </button>
+          <Button onClick={ruleGroupsManager.openNewGroupDialog} variant="secondary">
+            New Group <FolderPlusIcon aria-hidden="true" className="-mr-0.5 size-5" />
+          </Button>
 
-          <button
-            type="button"
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 cursor-pointer"
-
-            onClick={ruleEditor.openCreate}
-          >
-            New Rule
-            <PlusCircleIcon aria-hidden="true" className="-mr-0.5 size-5" />
-          </button>
+          <Button onClick={ruleEditor.openCreate}>
+            New Rule <PlusCircleIcon aria-hidden="true" className="-mr-0.5 size-5" />
+          </Button>
         </div>
       </div>
 
