@@ -3,11 +3,13 @@ import RulesList from '@/components/rules/RulesList';
 import useRules from '@/hooks/useRules';
 import { INTERCEPTO_SELECTED_RULE_ID_KEY } from '@/constants';
 import { type Rule } from '@/types/rule';
+import useRuleGroupsManager from '@/hooks/useRuleGroupsManager';
 
 const MAX_POPUP_RULES = 5;
 
 export default function Popup() {
   const { rules = [], activeRulesCount, toggleRule } = useRules();
+  const { onToggleGroupEnabled, onToggleGroupNotifications } = useRuleGroupsManager({ rules });
 
   const visibleRules = rules.slice(0, MAX_POPUP_RULES);
   const remainingRulesCount = Math.max(rules.length - MAX_POPUP_RULES, 0);
@@ -45,6 +47,8 @@ export default function Popup() {
           showMenu={false}
           onToggleRule={toggleRule}
           onSelectRule={rule => openOptionsPageWithRule(rule)}
+          onToggleGroupEnabled={onToggleGroupEnabled}
+          onToggleGroupNotifications={onToggleGroupNotifications}
         />
 
         {remainingRulesCount > 0 && (

@@ -25,6 +25,10 @@ export async function saveRules(rules: Rule[]): Promise<void> {
   await chrome.storage.local.set({ [RULES_STORAGE_KEY]: rules });
 }
 
+export async function clearRules(): Promise<void> {
+  await saveRules([]);
+}
+
 export async function addRule(draft: RuleDraft): Promise<Rule> {
   const rules = await getRules();
   const now = Date.now();

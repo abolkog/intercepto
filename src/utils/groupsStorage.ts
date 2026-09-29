@@ -53,6 +53,10 @@ export async function saveGroups(groups: Group[]): Promise<void> {
   await chrome.storage.local.set({ [RULE_GROUPS_STORAGE_KEY]: groups });
 }
 
+export async function clearGroups(): Promise<void> {
+  await saveGroups([]);
+}
+
 export async function addGroup(name: string, description?: string): Promise<void> {
   const normalizedName = trimString(name);
   if (!normalizedName) return;

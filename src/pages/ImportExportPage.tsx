@@ -1,10 +1,14 @@
 import { useState, useRef, DragEvent, ChangeEvent, SubmitEvent } from 'react';
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { CheckIcon } from '@heroicons/react/24/outline';
 import { exportRules, importRules } from '@/utils/ruleTransfer';
 import { DocumentTextIcon, ArrowUpTrayIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import { clx } from '@/utils/common';
 import { useNavigate } from 'react-router';
+import { clearRules } from '@/utils/ruleStorage';
+import { clearGroups } from '@/utils/groupsStorage';
+
+import ConfirmOverrideDialog from '@/components/importExport/ConfirmOverrideDialog';
+import ImportSuccessDialog from '@/components/importExport/ImportSuccessDialog';
+import Button from '@/components/ui/Button';
 
 export default function ImportExportPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -12,6 +16,9 @@ export default function ImportExportPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [importErrors, setImportErrors] = useState<string[]>([]);
   const [isImporting, setIsImporting] = useState<boolean>(false);
+  const [overrideExistingData, setOverrideExistingData] = useState<boolean>(false);
+  const [overrideConfirmOpen, setOverrideConfirmOpen] = useState<boolean>(false);
+  const [pendingImportFile, setPendingImportFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -54,6 +61,7 @@ export default function ImportExportPage() {
     setFiles([]);
     setImportErrors([]);
     setDragActive(false);
+    setOverrideExistingData(false);
     if (inputRef.current) {
       inputRef.current.value = '';
     }
@@ -63,14 +71,17 @@ export default function ImportExportPage() {
     resetForm();
   };
 
-  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+  const clearAllRulesAndGroups = async () => {
+    await Promise.all([clearRules(), clearGroups()]);
+  };
 
-    const file = files[0];
-    if (!file) return;
-
+  const runImport = async (file: File, shouldOverride: boolean): Promise<void> => {
     setIsImporting(true);
     try {
+      if (shouldOverride) {
+        await clearAllRulesAndGroups();
+      }
+
       const { errors } = await importRules(file);
       setImportErrors(errors);
 
@@ -85,7 +96,31 @@ export default function ImportExportPage() {
       console.error('Failed to import rules', err);
     } finally {
       setIsImporting(false);
+      setPendingImportFile(null);
     }
+  };
+
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
+    const file = files[0];
+    if (!file) return;
+
+    if (overrideExistingData) {
+      setPendingImportFile(file);
+      setOverrideConfirmOpen(true);
+      return;
+    }
+
+    await runImport(file, false);
+  };
+
+  const confirmOverrideImport = async () => {
+    const file = pendingImportFile;
+    if (!file) return;
+
+    setOverrideConfirmOpen(false);
+    await runImport(file, true);
   };
 
   const postImportSuccess = () => {
@@ -154,6 +189,24 @@ export default function ImportExportPage() {
                 </div>
               </div>
             </div>
+
+            <div className="col-span-full">
+              <label htmlFor="override-existing-data" className="flex items-start gap-3 cursor-pointer">
+                <input
+                  id="override-existing-data"
+                  type="checkbox"
+                  checked={overrideExistingData}
+                  onChange={event => setOverrideExistingData(event.target.checked)}
+                  className="mt-1 accent-purple-500"
+                />
+                <span>
+                  <span className="block text-sm font-medium text-white">Override everything (rules and groups)</span>
+                  <span className="block text-xs text-gray-400">
+                    Deletes all existing rules and groups before importing.
+                  </span>
+                </span>
+              </label>
+            </div>
           </div>
 
           {files.length > 0 && (
@@ -191,57 +244,26 @@ export default function ImportExportPage() {
           )}
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
-            <button type="button" onClick={handleCancel} className="text-sm/6 font-semibold text-white cursor-pointer">
+            <Button variant="secondary" onClick={handleCancel}>
               Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={files.length === 0 || isImporting}
-              className="rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
+            </Button>
+            <Button type="submit" disabled={files.length === 0 || isImporting}>
               {isImporting ? 'Saving...' : 'Import Rules'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
-      <Dialog open={dialogOpen} onClose={setDialogOpen} className="relative z-10">
-        <DialogBackdrop
-          transition
-          className="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
-        />
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <DialogPanel
-              transition
-              className="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pt-5 pb-4 text-left shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-sm sm:p-6 data-closed:sm:translate-y-0 data-closed:sm:scale-95"
-            >
-              <div>
-                <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-green-500/10">
-                  <CheckIcon aria-hidden="true" className="size-6 text-green-400" />
-                </div>
-                <div className="mt-3 text-center sm:mt-5">
-                  <DialogTitle as="h3" className="text-base font-semibold text-white">
-                    Import successful
-                  </DialogTitle>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-400">Rules imported successfully</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 sm:mt-6">
-                <button
-                  type="button"
-                  onClick={postImportSuccess}
-                  className="inline-flex w-full justify-center rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                >
-                  Go back to Rules Page
-                </button>
-              </div>
-            </DialogPanel>
-          </div>
-        </div>
-      </Dialog>
+      <ConfirmOverrideDialog
+        isOpen={overrideConfirmOpen}
+        onClose={() => {
+          setOverrideConfirmOpen(false);
+          setPendingImportFile(null);
+        }}
+        onConfirm={confirmOverrideImport}
+      />
+
+      <ImportSuccessDialog isOpen={dialogOpen} onClose={() => setDialogOpen(false)} onConfirm={postImportSuccess} />
     </>
   );
 }
