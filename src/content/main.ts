@@ -3,32 +3,39 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import { getRules, onRulesChanged } from '@/utils/ruleStorage';
 import {
+  type InterceptoRequestCapturedMessage,
   type InterceptoRequestRulesMessage,
   type InterceptoRuleMatchedMessage,
   type InterceptoRulesUpdateMessage,
 } from '@/types/interceptor';
 import {
+  INTERCEPTO_CAPTURE_ENABLED_KEY,
   INTERCEPTO_MESSAGE_SOURCE,
+  INTERCEPTO_REQUEST_CAPTURED,
   INTERCEPTO_REQUEST_RULES,
   INTERCEPTO_RULE_MATCHED,
   INTERCEPTO_RULES_UPDATE,
 } from '@/constants';
 import { notifyRuleMatched } from '@/utils/ruleNotifications';
+import { addCapturedRequest } from '@/utils/capturedRequestsStorage';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-const container = document.createElement('div');
-container.id = 'intercepto-toast-root';
-document.documentElement.appendChild(container);
+const isJsdom = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
+if (!isJsdom) {
+  const container = document.createElement('div');
+  container.id = 'intercepto-toast-root';
+  document.documentElement.appendChild(container);
 
-createRoot(container).render(
-  React.createElement(ToastContainer, {
-    position: 'top-center',
-    closeOnClick: true,
-    pauseOnHover: true,
-    theme: 'dark',
-  }),
-);
+  createRoot(container).render(
+    React.createElement(ToastContainer, {
+      position: 'top-center',
+      closeOnClick: true,
+      pauseOnHover: true,
+      theme: 'dark',
+    }),
+  );
+}
 
 function postRulesUpdateMessage(message: InterceptoRulesUpdateMessage): void {
   window.postMessage(message, '*');
@@ -60,6 +67,19 @@ window.addEventListener('message', (event: MessageEvent<InterceptoRuleMatchedMes
   if (event.data.type !== INTERCEPTO_RULE_MATCHED) return;
 
   notifyRuleMatched(event.data.ruleName, event.data.method, event.data.url);
+});
+
+window.addEventListener('message', (event: MessageEvent<InterceptoRequestCapturedMessage>) => {
+  if (event.source !== window) return;
+  if (!event.data || event.data.source !== INTERCEPTO_MESSAGE_SOURCE) return;
+  if (event.data.type !== INTERCEPTO_REQUEST_CAPTURED) return;
+
+  if (typeof chrome === 'undefined' || !chrome.storage?.local) return;
+
+  void chrome.storage.local.get(INTERCEPTO_CAPTURE_ENABLED_KEY).then(data => {
+    if (data[INTERCEPTO_CAPTURE_ENABLED_KEY] !== true) return;
+    void addCapturedRequest(event.data.request);
+  });
 });
 
 onRulesChanged(rules => {

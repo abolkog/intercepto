@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, TransitionChild } from '@headlessui/react';
-import { Bars3Icon, SquaresPlusIcon, ArrowsRightLeftIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { Bars3Icon, SquaresPlusIcon, ArrowsRightLeftIcon, XMarkIcon, CameraIcon } from '@heroicons/react/24/solid';
 import GitHubButton from 'react-github-btn';
 import AppLogo from './AppLogo';
 import { NavLink, Outlet } from 'react-router';
@@ -9,6 +9,7 @@ import { clx } from '@/utils/common';
 const navigation = [
   { name: 'Rules', href: '/', icon: SquaresPlusIcon },
   { name: 'Import/Export', href: 'import-export', icon: ArrowsRightLeftIcon },
+  { name: 'Capture Requests', href: 'capture-requests', icon: CameraIcon },
 ];
 
 function NavList() {

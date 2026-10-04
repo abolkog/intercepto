@@ -6,6 +6,7 @@ import { HashRouter, Route, Routes } from 'react-router';
 import Layout from '@/components/ui/Layout.tsx';
 import RulesPage from '@/pages/RulesPage';
 import ImportExportPage from '@/pages/ImportExportPage';
+import CaptureRequestsPage from '@/pages/CaptureRequestsPage';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
         <Route element={<Layout />}>
           <Route index element={<RulesPage />} />
           <Route path="import-export" element={<ImportExportPage />} />
+          <Route path="capture-requests" element={<CaptureRequestsPage />} />
         </Route>
       </Routes>
     </HashRouter>

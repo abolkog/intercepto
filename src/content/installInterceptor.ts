@@ -1,11 +1,13 @@
 import {
   INTERCEPTO_STATE_KEY,
+  INTERCEPTO_REQUEST_CAPTURED,
   INTERCEPTO_RULE_MATCHED,
   INTERCEPTO_RULES_UPDATE,
   INTERCEPTO_MESSAGE_SOURCE,
 } from '@/constants';
 import { type InterceptoMessage, type InterceptoRulesUpdateMessage, type XhrMeta } from '@/types/interceptor';
 import { Rule } from '@/types/rule';
+import type { CapturedRequestDraft, RequestSource } from '@/types/capture';
 
 export function installInterceptor(): void {
   const globalWindow = window as Window & {
@@ -53,6 +55,44 @@ export function installInterceptor(): void {
     window.postMessage(message, '*');
   };
 
+  const notifyRequestCaptured = (
+    inputUrl: string,
+    method: string,
+    source: RequestSource,
+    mocked: boolean,
+    statusCode?: number,
+    responseBody?: string,
+    matchedRuleName?: string,
+  ): void => {
+    const toAbsoluteUrl = (): string => {
+      try {
+        return new URL(inputUrl, window.location.href).toString();
+      } catch {
+        return inputUrl;
+      }
+    };
+
+    const payload: CapturedRequestDraft = {
+      method: method.toUpperCase(),
+      url: toAbsoluteUrl(),
+      pageUrl: window.location.href,
+      source,
+      capturedAt: Date.now(),
+      statusCode,
+      responseBody,
+      mocked,
+      matchedRuleName,
+    };
+
+    const message: Extract<InterceptoMessage, { type: typeof INTERCEPTO_REQUEST_CAPTURED }> = {
+      source: INTERCEPTO_MESSAGE_SOURCE,
+      type: INTERCEPTO_REQUEST_CAPTURED,
+      request: payload,
+    };
+
+    window.postMessage(message, '*');
+  };
+
   const messageListener = (event: MessageEvent<InterceptoRulesUpdateMessage>) => {
     if (event.source !== window) return;
     if (!event.data || event.data.source !== INTERCEPTO_MESSAGE_SOURCE || event.data.type !== INTERCEPTO_RULES_UPDATE)
@@ -81,7 +121,16 @@ export function installInterceptor(): void {
     const matchedRule = findMatchingRule(url, method, state.rules);
 
     if (!matchedRule) {
-      return originalFetch(input, init);
+      const response = await originalFetch(input, init);
+      let responseBody: string | undefined;
+      try {
+        responseBody = await response.clone().text();
+      } catch {
+        responseBody = undefined;
+      }
+
+      notifyRequestCaptured(url, method, 'fetch', false, response.status, responseBody);
+      return response;
     }
 
     notifyRuleMatched(matchedRule);
@@ -92,6 +141,8 @@ export function installInterceptor(): void {
     }
 
     const body = matchedRule.responseBody ?? '';
+    notifyRequestCaptured(url, method, 'fetch', true, matchedRule.statusCode, body, matchedRule.name);
+
     return new Response(body, {
       status: matchedRule.statusCode,
       headers: {
@@ -120,6 +171,20 @@ export function installInterceptor(): void {
 
     const matchedRule = findMatchingRule(meta.url, meta.method, state.rules);
     if (!matchedRule) {
+      this.addEventListener(
+        'loadend',
+        () => {
+          let responseBody: string | undefined;
+          try {
+            responseBody = typeof this.responseText === 'string' ? this.responseText : undefined;
+          } catch {
+            responseBody = undefined;
+          }
+
+          notifyRequestCaptured(meta.url, meta.method, 'xhr', false, this.status, responseBody);
+        },
+        { once: true },
+      );
       return originalXhrSend.call(this, body);
     }
 
@@ -149,6 +214,8 @@ export function installInterceptor(): void {
       this.onreadystatechange?.(new Event('readystatechange'));
       this.onload?.(new ProgressEvent('load'));
       this.onloadend?.(new ProgressEvent('loadend'));
+
+      notifyRequestCaptured(meta.url, meta.method, 'xhr', true, matchedRule.statusCode, responseBody, matchedRule.name);
     };
 
     const delayMs = Math.max(0, matchedRule.delayMs ?? 0);
