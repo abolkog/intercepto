@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/abolkog/intercepto/compare/v1.3.0...v1.4.0) (2026-10-04)
+
+### Bug Fixes
+
+- **ext:** update description to fit the chrome store listing requirements ([41d2a1d](https://github.com/abolkog/intercepto/commit/41d2a1d703dd670cb1cb09bc71d2d761e1a5867c))
+
+### Features
+
+- **ext:** add import/export confirmation dialogs and functionality ([c88a337](https://github.com/abolkog/intercepto/commit/c88a3374229e01f95f858670bae8c505bb462fb2))
+- **ext:** implement import/export functionality for rules with drag-and-drop support ([0266550](https://github.com/abolkog/intercepto/commit/0266550df0d441f3af1f90039ec8eed3ccb7d652))
+- **ext:** implement request capturing functionality and UI ([5be3887](https://github.com/abolkog/intercepto/commit/5be388763132dce0e99d7817d8c94c3c00d72d71))
+- **ext:** implement rule editor and group management hooks ([96f51bd](https://github.com/abolkog/intercepto/commit/96f51bdf07c615065fef82273e8ef4104f99b28f))
+
 # [1.3.0](https://github.com/abolkog/intercepto/compare/v1.2.0...v1.3.0) (2026-09-16)
 
 ### Bug Fixes
