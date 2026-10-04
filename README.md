@@ -23,28 +23,29 @@ and response bodies directly from extension rules.
     <picture>
       <img
         alt="Intercepto"
-        src="./assets/ui-sample.png"
-        width="60%"
-      />
+        src="./assets/ui-sample.png" />
     </picture>
 </p>
 
 ## Features
 
-| Feature                | What it does                                                   |
-| ---------------------- | -------------------------------------------------------------- |
-| 🎯 Rule-Based Matching | Match requests by URL pattern and HTTP method                  |
-| 🧾 Custom Responses    | Return custom status codes with JSON or text bodies            |
-| 🌐 Fetch & XHR Support | Works with page requests made through fetch and XMLHttpRequest |
-| 🖥️ Popup & Options UI  | Manage all your rules from a simple, dedicated UI              |
-| 💾 Local Storage       | Everything is stored locally — nothing leaves your browser     |
-| 📖 Open Source         | Free to use, inspect, and contribute to                        |
+| Feature                          | What it does                                                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| 🎯 Rule-Based Matching           | Match requests by URL pattern and HTTP method                                                           |
+| 🧾 Custom Responses              | Return custom status codes with JSON or text bodies                                                     |
+| 🌐 Fetch & XHR Support           | Works with page requests made through fetch and XMLHttpRequest                                          |
+| 🎥 Record & Create from Requests | Capture real traffic and turn any response into a rule — prefilled URL, method, status, and body        |
+| 🗂️ Rule Groups / Scenarios       | Organize rules into named groups and toggle a whole state (e.g. "logged out", "payment failed") at once |
+| 🖥️ Popup & Options UI            | Manage all your rules from a simple, dedicated UI                                                       |
+| 💾 Local Storage                 | Everything is stored locally — nothing leaves your browser                                              |
+| 📖 Open Source                   | Free to use, inspect, and contribute to                                                                 |
 
 ## Why developers pick Intercepto
 
 - 🔒 **Everything Stays Local:** No accounts, no cloud sync. Your rules live in your browser, under your control.
 - ⚡ **Lightweight & Fast:** No servers to run, no proxies to configure. Just create a rule and go.
 - 🆓 **Free & Open Source:** No tiers, no limits, no paywalls. Ever.
+- 🎯 Capture, Don't Guess: Create mocks from requests your app actually made — real shape, real headers, no hand-written JSON that drifts from the real API.
 
 > "Mock any API response without touching a line of backend code."
 
