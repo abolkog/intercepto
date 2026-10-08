@@ -24,7 +24,7 @@ export default function Popup() {
   };
 
   return (
-    <div className="flex w-90 max-h-96 min-h-52 flex-col text-slate-100">
+    <div className="flex w-xl max-h-96 min-h-52 flex-col text-slate-100">
       <div className="flex items-center justify-between border-b border-slate-700 px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-purple-400 shadow-[0_0_8px_blue]" />

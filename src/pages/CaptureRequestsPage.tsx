@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Button from '@/components/ui/Button';
 import useCapturedRequests from '@/hooks/useCapturedRequests';
@@ -6,6 +6,8 @@ import { INTERCEPTO_CAPTURE_ENABLED_KEY, INTERCEPTO_SELECTED_RULE_ID_KEY } from 
 import { clx } from '@/utils/common';
 import type { HttpMethod, RuleDraft } from '@/types/rule';
 import { addRule } from '@/utils/ruleStorage';
+import { TextField } from '@/components/ui/TextField';
+import { SelectField } from '@/components/ui/SelectField';
 
 function formatCapturedAt(timestamp: number): string {
   return new Date(timestamp).toLocaleString();
@@ -51,7 +53,31 @@ export default function CaptureRequestsPage() {
   const navigate = useNavigate();
   const [captureEnabled, setCaptureEnabled] = useState(false);
   const [creatingRequestId, setCreatingRequestId] = useState<string | null>(null);
+  const [urlFilter, setUrlFilter] = useState('');
+  const [methodFilter, setMethodFilter] = useState('ALL');
   const hasRequests = (requests?.length ?? 0) > 0;
+
+  const normalizedUrlFilter = urlFilter.trim().toLowerCase();
+  const methodOptions = useMemo(() => {
+    if (!requests?.length) {
+      return ['ALL'];
+    }
+
+    const methods = new Set(requests.map(request => request.method.toUpperCase()));
+    return ['ALL', ...Array.from(methods).sort((a, b) => a.localeCompare(b))];
+  }, [requests]);
+
+  const filteredRequests = useMemo(() => {
+    if (!requests) return undefined;
+
+    return requests.filter(request => {
+      const requestMethod = request.method.toUpperCase();
+      const requestUrl = request.url.toLowerCase();
+      const methodMatches = methodFilter === 'ALL' || requestMethod === methodFilter;
+      const urlMatches = normalizedUrlFilter.length === 0 || requestUrl.includes(normalizedUrlFilter);
+      return methodMatches && urlMatches;
+    });
+  }, [methodFilter, normalizedUrlFilter, requests]);
 
   useEffect(() => {
     void chrome.storage.local.get(INTERCEPTO_CAPTURE_ENABLED_KEY).then(data => {
@@ -128,6 +154,31 @@ export default function CaptureRequestsPage() {
         </div>
       </div>
 
+      <div></div>
+
+      <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+        <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_180px_auto] sm:items-end">
+          <TextField
+            type="text"
+            id="url-filter"
+            label="Filter by URL"
+            value={urlFilter}
+            onChange={value => setUrlFilter(value)}
+            placeholder="Contains..."
+            className="px-3! py-2! text-sm"
+          />
+
+          <SelectField
+            label="Filter by Method"
+            id="method-filter"
+            options={methodOptions.map(o => ({ label: o, value: o }))}
+            value={methodFilter}
+            onChange={value => setMethodFilter(value)}
+            className="px-3! py-2! text-sm"
+          />
+        </div>
+      </div>
+
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -172,7 +223,15 @@ export default function CaptureRequestsPage() {
                     </tr>
                   )}
 
-                  {requests?.map(request => (
+                  {requests !== undefined && requests.length > 0 && filteredRequests?.length === 0 && (
+                    <tr>
+                      <td className="px-4 py-6 text-sm text-gray-400" colSpan={6}>
+                        No captured requests match the current filters.
+                      </td>
+                    </tr>
+                  )}
+
+                  {filteredRequests?.map(request => (
                     <tr key={request.id}>
                       <td className="px-4 py-4 text-sm text-white">
                         <span
