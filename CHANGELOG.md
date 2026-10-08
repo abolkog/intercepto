@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/abolkog/intercepto/compare/v1.4.0...v1.4.1) (2026-10-08)
+
+### Bug Fixes
+
+- **ext:** add URL and method filters to CaptureRequestsPage ([6eb386d](https://github.com/abolkog/intercepto/commit/6eb386d8c44abf1bff1a8e4563ffd9b4f122d2f8))
+
 # [1.4.0](https://github.com/abolkog/intercepto/compare/v1.3.0...v1.4.0) (2026-10-04)
 
 ### Bug Fixes

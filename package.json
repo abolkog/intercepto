@@ -2,7 +2,7 @@
   "name": "intercepto",
   "description": "Intercept API calls and mock their status code and response body, right in the browser.",
   "type": "module",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "workspaces": [
     "site"
